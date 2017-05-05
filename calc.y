@@ -104,12 +104,24 @@ exp:		REGISTER 	{ addtoReg($1); $$ = regToInt($1);}
 				cReg = 1; r[0] = $$;
 				}
 | exp MULT exp	{ $$ = $1 * $3;
-				// char* temp = (char *)malloc(strlen("addl	r1, r0\n"));
-				// sprintf(temp,"addl	r1, r0\n");
-				// inmain = cat(inmain,temp);
+				// imull	-4(%rbp), %eax
+
+				char* temp = (char *)malloc(strlen("imul	r1, r0\n"));
+				sprintf(temp,"imul	r1, r0\n");
+				inmain = cat(inmain,temp);
 
 				cReg = 1; r[0] = $$;}
-| exp DIV exp	{ $$ = $1 / $3; cReg = 1; r[0] = $$;}
+| exp DIV exp	{ $$ = $1 / $3; cReg = 1; r[0] = $$;
+				/*
+				movl	-8(%rbp), %eax
+				cltd
+				idivl	-4(%rbp)
+				movl	%eax, -8(%rbp)
+				*/
+				char* temp = (char *)malloc(strlen("	movl	r0, %%eax\ncltd\n\tidivl	r1\n"));
+				sprintf(temp,"	movl	r0, %%eax\ncltd\n\tidivl	r1\n");
+				inmain = cat(inmain,temp);
+				}
 | exp MOD exp	{ $$ = $1 % $3; cReg = 1; r[0] = $$;}
 | MINUS exp  %prec NEG { 	$$ = -$2;
 							cReg--;
@@ -213,8 +225,9 @@ void funtionLOOP(int con,int stat1)
 	cmpl	$4, -8(%rbp)
 	jle	.L3
 	*/
-	//char *temp = (char *)malloc(strlen("/tmov/t"));
 
+	//char *temp = (char *)malloc(strlen("/tmov/t"));
+	char* temp = (char *)malloc("	movl	$0, r%%d");
 	int i=0;
 	for(;i<con;i++)
 	{
