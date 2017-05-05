@@ -80,7 +80,7 @@ input:		/* empty */
 | loop
 | init	{printf("%s\n",inmain);}
 | STRING { SHOWSTRING($1); }
-| EXIT {return 0;}
+| EXIT {return 4;}
 ;
 //char* temp = (char *)malloc(strlen("\taddl\t$%d,\t%d(%%rbp)"),$1,$2);
 exp:		REGISTER 	{ addtoReg($1); $$ = regToInt($1);}
