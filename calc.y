@@ -243,18 +243,12 @@ void SHOWSTRING(string* str)
 	inmain = cat(inmain,temp);
 
 	//header
-	if(notReg){
 		temp = (char *)malloc(strlen("\n.LC%d\n\t.string\t\""));
 		sprintf(temp,".LC%d\n\t.string\t\"",countString);
 		header = cat(header,temp);
-	}
-	else{
 		//.LC0:
 		//		.string	"%d"
-		temp = (char *)malloc(strlen("\n.LC%d\n\t.string\t\""));
-		sprintf(temp,".LC%d\n\t.string\t\"",countString);
-		header = cat(header,temp);
-	}
+
 
 	/*movl	-4(%rbp), %eax
 	movl	%eax, %esi
