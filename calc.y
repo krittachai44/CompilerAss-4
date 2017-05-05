@@ -144,7 +144,7 @@ init:		REGISTER INIT exp 	{ 	loadToReg($3,$1);
 									sprintf(temp,"	movl	r0, %d(%%rbp)\n",((a[4]-'A')*8)+200);
 									inmain = cat(inmain,temp);
 
-									cReg = 1; r[0] = $$;
+									cReg = 0; r[0] = $$;
 								}
 ;
 
