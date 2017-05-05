@@ -103,7 +103,7 @@ exp:		REGISTER 	{ addtoReg($1); $$ = regToInt($1);}
 
 				cReg = 1; r[0] = $$;
 				}
-| exp MULT exp	{ $$ = $1 * $3;
+| exp MULT exp	{ printf("sfsxf"); $$ = $1 * $3;
 				// imull	-4(%rbp), %eax
 
 				char* temp = (char *)malloc(strlen("imul	r1, r0\n"));
