@@ -17,6 +17,7 @@
 	void funtionLOOP(int con,int stat1);
 
 	void addtoReg(string* in);
+	void addtoReg(int in);
 
 	char* cat(char* old,char* nw); // concast string
 
@@ -137,12 +138,17 @@ char* cat(char* old,char* nw){
 void addtoReg(string* in){
 	char a[100];
 	strcpy(a,(*in).c_str());
-	if(a[1] = 'r'){
-		r[cReg]=reg[a[4]-'A'];
-	}
-	else{
-		r[cReg]=atoi(a);
-	}
+	r[cReg]=reg[a[4]-'A'];
+
+	char* temp = (char *)malloc(strlen("movl	$%d, r%d"));
+	sprintf(temp,"movl	$%d, r%d",r[cReg],cReg);
+	inmain = cat(inmain,temp);
+	cReg++;
+}
+
+void addtoReg(int in){
+	r[cReg] = in;
+	
 	char* temp = (char *)malloc(strlen("movl	$%d, r%d"));
 	sprintf(temp,"movl	$%d, r%d",r[cReg],cReg);
 	inmain = cat(inmain,temp);
