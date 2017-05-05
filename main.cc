@@ -15,9 +15,8 @@ int main(int argc, char **argv)
 	  }
 	int a=0;
 	while(a != 4) {
-		a = yyparse();
 		printf("\r> ");
-		if( a = 4 );
+		a = yyparse();
 	}
 
   return 0;
