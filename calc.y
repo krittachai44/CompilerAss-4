@@ -111,7 +111,7 @@ exp:		REGISTER 	{ addtoReg($1); $$ = regToInt($1);}
 | MINUS exp  %prec NEG { 	$$ = -$2;
 							r[cReg] = 0-$2;
 
-							char* temp = (char *)malloc(strlen("	movl	$%d, r%d\n"));
+							char* temp ;
 							sprintf(temp,"	movl	$%d, r%d\n",r[cReg],cReg);
 							inmain = cat(inmain,temp);
 							cReg++;
