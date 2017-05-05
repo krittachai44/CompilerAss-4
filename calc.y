@@ -16,6 +16,7 @@
 	void funtionIFELSE(int con,int stat1,int stat2);
 	void funtionLOOP(int con,int stat1);
 
+	void addtoReg(string* in);
 
 	char* cat(char* old,char* nw); // concast string
 
@@ -29,6 +30,9 @@
 	int countString = 0;
 	char *header="";
 	char *inmain="";
+
+	int r[13]={0};//r0-r12
+	int cReg = 0;
 
 %}
 
@@ -78,53 +82,14 @@ input:		/* empty */
 | EXIT {return 4;}
 ;
 //char* temp = (char *)malloc(strlen("\taddl\t$%d,\t%d(%%rbp)"),$1,$2);
-exp:		REGISTER 	{$$ = regToInt($1);}
+exp:		REGISTER 	{ addtoReg($1); $$ = regToInt($1);}
 // movl	-8(%rbp), %eax
-|INTEGER_LITERAL{ $$ = $1; }
-| exp PLUS exp	{ $$ = $1 + $3; }
-/*
-how to know exp is register or just value?????????
-regis + regis
-
-char* temp = (char *)malloc(strlen("\tmovl\t%d(%%rbp), %%eax\n
-\taddl\t%%eax, %d(%%rbp)");
-sprintf(temp,"\tmovl\t%d(%%rbp), %%eax\n
-\taddl\t%%eax, %d(%%rbp)",);
-
-movl	-4(%rbp), %eax
-addl	%eax, -8(%rbp)
-*/
-/*
-val + val
-use loadToReg($1+$3,) end
-movl	$val+val, -4(%rbp)
-*/
-/*
-val + regis same regis + val
-
-movl	-4(%rbp), %eax
-addl	$5, %eax
-movl	%eax, -4(%rbp)
-*/
-
-| exp MINUS exp	{ $$ = $1 - $3; }
-
-/*
-movl	-4(%rbp), %eax
-subl	%eax, -8(%rbp)
-
-movl	$-1, -8(%rbp)
-
-movl	-8(%rbp), %eax
-subl	$2, %eax
-movl	%eax, -4(%rbp)
-*/
-| exp MULT exp	{ $$ = $1 * $3; }
-| exp DIV exp	{ $$ = $1 / $3; }
-| exp MOD exp	{ $$ = $1 % $3; }
-| exp OR exp	{ $$ = $1 | $3; }
-| exp AND exp	{ $$ = $1 & $3; }
-| NOT exp 	{ $$ = ~$2 ; }
+|INTEGER_LITERAL{ addtoReg($1); $$ = $1; }
+| exp PLUS exp	{ $$ = $1 + $3; cReg = 1;}
+| exp MINUS exp	{ $$ = $1 - $3; cReg = 1;}
+| exp MULT exp	{ $$ = $1 * $3; cReg = 1;}
+| exp DIV exp	{ $$ = $1 / $3; cReg = 1;}
+| exp MOD exp	{ $$ = $1 % $3; cReg = 1;}
 | MINUS exp  %prec NEG { $$ = -$2;}
 | '(' exp ')'        { $$ = $2;}
 | condition
@@ -149,32 +114,40 @@ compare:	IF '(' exp ')' '{' exp '}'  					{funtionIF($3,$6);}
 loop:		FORWARD '(' exp ',' exp ')' 			{funtionLOOP($3,$5);}
 			| FORWARD'('exp ',' FORWARD'('exp','exp')'')'
 													{ int i = 0 ; for(;i<$3;i++) funtionLOOP($7,$9); }
-//| FORWARD'('exp ',' FORWARD'('exp','exp')'')'
 ;
 
-command:	SHOW_DEC exp 				{
-	/*
-
-	movl	-4(%rbp), %eax
-	movl	%eax, %esi
-	movl	$.LC0, %edi
-	movl	$0, %eax
-	call	printf
-	if(exp == val){
-
-	}
-	if(exp == register){
-
-	}
-*/
-$$=$2;
-}
+command:	SHOW_DEC exp 	{ $$=$2; }
 ;
 
-init:		REGISTER INIT exp 			{loadToReg($3,$1);}
+init:		REGISTER INIT exp 	{ loadToReg($3,$1); }
 ;
 
 %%
+
+char* cat(char* old,char* nw){
+	int a = strlen(old);
+	int b = strlen(nw);
+	int sum = a + b + 1;
+	char *tmp = (char *)malloc(sum);
+	strcpy(tmp,old);
+	strcat(tmp,nw);
+	return tmp;
+}
+
+void addtoReg(string* in){
+	char a[100];
+	strcpy(a,(*in).c_str());
+	if(a[1] = 'r'){
+		r[cReg]=reg[a[4]-'A'];
+	}
+	else{
+		r[cReg]=atoi(a);
+	}
+	char* temp = (char *)malloc(strlen("movl	$%d, r%d"));
+	sprintf(temp,"movl	$%d, r%d",r[cReg],cReg);
+	inmain = cat(inmain,temp);
+	cReg++;
+}
 
 void funtionIF(int con,int stat1)
 {
@@ -207,31 +180,20 @@ void funtionLOOP(int con,int stat1)
 	}
 }
 
-
-char* cat(char* old,char* nw){
-	int a = strlen(old);
-	int b = strlen(nw);
-	int sum = a + b + 1;
-	char *tmp = (char *)malloc(sum);
-	strcpy(tmp,old);
-	strcat(tmp,nw);
-	return tmp;
-}
-
 void SHOWSTRING(string* str)
 {
 	char a[100];
 	strcpy(a,(*str).c_str());
-	int notNum = 0;
-	int len = strlen((*str).c_str());
+	// int notNum = 0;
+	// int len = strlen((*str).c_str());
 	int i;
-	for (i = 7; i < len; i++)
-    {
-        if (!isdigit(a[i])) {
-			notNum = 1;
-			break;
-		}
-    }
+	// for (i = 7; i < len; i++)
+    // {
+    //     if (!isdigit(a[i])) {
+	// 		notNum = 1;
+	// 		break;
+	// 	}
+    // }
 
 	a[(*str).length()+1] = '^';
 
@@ -240,91 +202,90 @@ void SHOWSTRING(string* str)
 	.string	"xxx"
 
 	*/
-	char* temp = (char *)malloc(strlen("\n\tmovl\t$.LC%d, %%edi\n"));
-	sprintf(temp,"\tmovl\t$.LC%d, %%edi\n",countString);
-	inmain = cat(inmain,temp);
-
-	temp = (char *)malloc(strlen("\tmovl\t$%d, %%eax\n\tcall\tprintf\n"));
-	sprintf(temp,"\tmovl\t$0, %%eax\n\tcall\tprintf\n");
-	inmain = cat(inmain,temp);
-
-	//header
-	temp = (char *)malloc(strlen("\n.LC%d\n\t.string\t\""));
-	sprintf(temp,".LC%d\n\t.string\t\"",countString);
-	header = cat(header,temp);
-
-	/*movl	-4(%rbp), %eax
-	movl	%eax, %esi
-	movl	$.LC0, %edi
-	movl	$0, %eax
-	call	printf*/
-
-	i = 7;
-	while(a[i] != '^')
-	{
-		if(a[i]=='N'&&a[i+1]=='E'&&a[i+2]=='W'&&a[i+3]=='L'&&a[i+4]=='I'&&a[i+5]=='N'&&a[i+6]=='E'){
-			//header
-			temp = (char *)malloc(strlen("\n"));
-			sprintf(temp,"\n");
-			header = cat(header,temp);
-			i+=6;
-		}
-		else if( a[i]=='#'&&a[i+1]=='r'&&a[i+2]=='e'&&a[i+3]=='g'&&a[i+4]>='A'&&a[i+4]<='Z'){
-			//header
-			temp = (char *)malloc(2);
-			sprintf(temp,"%%d");
-			header = cat(header,temp);
-			//inmain
-			temp = (char *)malloc(strlen("\tmovl\t%d(%%rbp), %%eax\n\tmovl\t%%eax, %%esi\n"));
-			sprintf(temp,"\tmovl\t%d(%%rbp), %%eax\n\tmovl\t%%eax, %%esi\n",((a[i+4]-'A')*7)+100);
-			inmain = cat(inmain,temp);
-			i+=4;
-		}
-		else{
-			if(notNum){
-				temp = (char *)malloc(strlen("%%d")); // malloc for any character
-				//header
-				sprintf(temp,"%%d");
-				header = cat(header,temp);
-			}
-			else{
-				temp = (char *)malloc(2);
-				sprintf(temp,"%%d");
-				header = cat(header,temp);
-			}
-		}
-		i++;
-	}
-	//header
-	temp = (char *)malloc(strlen("\"\n"));
-	sprintf(temp,"\"\n");
-	header = cat(header,temp);
-
-	printf("%s",header);
-	printf("%s",inmain);
+	// char* temp = (char *)malloc(strlen("\n\tmovl\t$.LC%d, %%edi\n"));
+	// sprintf(temp,"\tmovl\t$.LC%d, %%edi\n",countString);
+	// inmain = cat(inmain,temp);
+	//
+	// temp = (char *)malloc(strlen("\tmovl\t$%d, %%eax\n\tcall\tprintf\n"));
+	// sprintf(temp,"\tmovl\t$0, %%eax\n\tcall\tprintf\n");
+	// inmain = cat(inmain,temp);
+	//
+	// //header
+	// temp = (char *)malloc(strlen("\n.LC%d\n\t.string\t\""));
+	// sprintf(temp,".LC%d\n\t.string\t\"",countString);
+	// header = cat(header,temp);
+	//
+	// /*movl	-4(%rbp), %eax
+	// movl	%eax, %esi
+	// movl	$.LC0, %edi
+	// movl	$0, %eax
+	// call	printf*/
+	//
+	// i = 7;
+	// while(a[i] != '^')
+	// {
+	// 	if(a[i]=='N'&&a[i+1]=='E'&&a[i+2]=='W'&&a[i+3]=='L'&&a[i+4]=='I'&&a[i+5]=='N'&&a[i+6]=='E'){
+	// 		//header
+	// 		temp = (char *)malloc(strlen("\n"));
+	// 		sprintf(temp,"\n");
+	// 		header = cat(header,temp);
+	// 		i+=6;
+	// 	}
+	// 	else if( a[i]=='#'&&a[i+1]=='r'&&a[i+2]=='e'&&a[i+3]=='g'&&a[i+4]>='A'&&a[i+4]<='Z'){
+	// 		//header
+	// 		temp = (char *)malloc(2);
+	// 		sprintf(temp,"%%d");
+	// 		header = cat(header,temp);
+	// 		//inmain
+	// 		temp = (char *)malloc(strlen("\tmovl\t%d(%%rbp), %%eax\n\tmovl\t%%eax, %%esi\n"));
+	// 		sprintf(temp,"\tmovl\t%d(%%rbp), %%eax\n\tmovl\t%%eax, %%esi\n",((a[i+4]-'A')*7)+100);
+	// 		inmain = cat(inmain,temp);
+	// 		i+=4;
+	// 	}
+	// 	else{
+	// 		if(notNum){
+	// 			temp = (char *)malloc(strlen("%%d")); // malloc for any character
+	// 			//header
+	// 			sprintf(temp,"%%d");
+	// 			header = cat(header,temp);
+	// 		}
+	// 		else{
+	// 			temp = (char *)malloc(2);
+	// 			sprintf(temp,"%%d");
+	// 			header = cat(header,temp);
+	// 		}
+	// 	}
+	// 	i++;
+	// }
+	// //header
+	// temp = (char *)malloc(strlen("\"\n"));
+	// sprintf(temp,"\"\n");
+	// header = cat(header,temp);
+	//
+	// printf("%s",header);
+	// printf("%s",inmain);
 	/*
 	main	movl	$.LC0, %edi
 	movl	$0, %eax
 	call	printf
 	*/
 
-	countString++;
-	/*
-	/*i=7;
-	while(a[i] != '^')
-	{
-	if(a[i]=='N'&&a[i+1]=='E'&&a[i+2]=='W'&&a[i+3]=='L'&&a[i+4]=='I'&&a[i+5]=='N'&&a[i+6]=='E')
-	{
+	//countString++;
+
+	i=7;
+	while(a[i] != '^'){
+		if(a[i]=='N'&&a[i+1]=='E'&&a[i+2]=='W'&&a[i+3]=='L'&&a[i+4]=='I'&&a[i+5]=='N'&&a[i+6]=='E'){
+			printf("\n");
+			i+=6;
+		}
+		else if( a[i]=='#'&&a[i+1]=='r'&&a[i+2]=='e'&&a[i+3]=='g'&&a[i+4]>='A'&&a[i+4]<='Z'){
+			printf("%d",reg[a[i+4]-'A']); i+=4;
+		}
+		else
+			printf("%c",a[i]);
+		i++;
+	}
 	printf("\n");
-	i+=6;
-}
-else if( a[i]=='#'&&a[i+1]=='r'&&a[i+2]=='e'&&a[i+3]=='g'&&a[i+4]>='A'&&a[i+4]<='Z')
-{ printf("%d",reg[a[i+4]-'A']); i+=4; }
-else
-printf("%c",a[i]);
-i++;
-}
-printf("\n");*/
 }
 
 
@@ -369,23 +330,22 @@ int regToInt(string* regname)
 	strcpy(cregname, (*regname).c_str());
 
 	// movl	-8(%rbp), %eax
-	char* temp = (char *)malloc(strlen("\tmovl\t%d(%%rbp), %%eax\n"));
+	/*char* temp = (char *)malloc(strlen("\tmovl\t%d(%%rbp), %%eax\n"));
 	sprintf(temp,"\tmovl\t%d(%%rbp), %%eax\n",((cregname[4]-'A')*7)+100);
-	inmain = cat(inmain,temp);
+	inmain = cat(inmain,temp);*/
 	//printf("%s",inmain);
-	isReg = 1;
-	inregTo = 1;
 	return reg[cregname[4]-'A'];
 }
 
 void loadToReg(int vval, string* regname)
 {
+
 	char cregname[10];
 	strcpy(cregname, (*regname).c_str());
 	int regVal;
 	regVal = cregname[4]-'A';
 
-	if(inregTo){
+	/*if(inregTo){
 		// movl	%eax, -4(%rbp)
 		char* temp = (char *)malloc(strlen("\tmovl\t%%eax, %d(%%rbp)\n"));
 		sprintf(temp,"\tmovl\t%%eax, %d(%%rbp)\n",((cregname[4]-'A')*7)+100);
@@ -400,7 +360,7 @@ void loadToReg(int vval, string* regname)
 	isReg = 0;
 	inregTo = 0;
 	printf("%s",inmain);
-
+	*/
 	//	printf("\tmovl\t$%d, %d(%rbp)\n",vval,(regVal*7)+100);
 	reg[cregname[4]-'A'] = vval;
 
