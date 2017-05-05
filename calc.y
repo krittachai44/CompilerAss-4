@@ -110,10 +110,10 @@ exp:		REGISTER 	{ addtoReg($1); $$ = regToInt($1);}
 | exp MOD exp	{ $$ = $1 % $3; cReg = 1; r[0] = $$;}
 | MINUS exp  %prec NEG { 	$$ = -$2;
 							cReg--;
-							int temp = r[cReg]*2;
+							int tempR = r[cReg]*2;
 
 							char* temp = (char *)malloc(strlen("	subl	$%d, r%d\n"))
-							sprintf(temp,"	subl	$%d, r%d\n",temp,cReg);
+							sprintf(temp,"	subl	$%d, r%d\n",tempR,cReg);
 							inmain = cat(inmain,temp);
 							cReg++;
 						}
