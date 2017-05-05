@@ -78,7 +78,7 @@ input:		/* empty */
 | exp	{ cout << "= " << $1 << endl; cReg = 0; printf("%s\n",inmain); }
 | compare
 | loop
-| init
+| init	{printf("%s\n",inmain);}
 | STRING { SHOWSTRING($1); }
 | EXIT {return 4;}
 ;
