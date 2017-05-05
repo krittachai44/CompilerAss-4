@@ -226,36 +226,42 @@ void SHOWSTRING(string* str)
 {
 	char a[100];
 	strcpy(a,(*str).c_str());
-	int notNum = 0;
-	int len = strlen((*str).c_str());
-	int i;
-	for (i = 7; i < len; i++)
-    {
-        if (!isdigit(a[i])) {
-			notNum = 1;
-			break;
-		}
-    }
-
 	a[(*str).length()+1] = '^';
+
+	int notReg = 1;
+	for(i = 7;i < (*str).length()+1;i++){
+		if( a[i]=='#'&&a[i+1]=='r'&&a[i+2]=='e'&&a[i+3]=='g'&&a[i+4]>='A'&&a[i+4]<='Z'){
+				notReg = 0;
+		}
+	}
 
 	/*
 	header	.LCCountString:
 	.string	"xxx"
 
+	movl	$.LC0, %edi
+	movl	$0, %eax
+	call	printf
 	*/
-	char* temp = (char *)malloc(strlen("\n\tmovl\t$.LC%d, %%edi\n"));
-	sprintf(temp,"\tmovl\t$.LC%d, %%edi\n",countString);
-	inmain = cat(inmain,temp);
+	char* temp;
 
-	temp = (char *)malloc(strlen("\tmovl\t$%d, %%eax\n\tcall\tprintf\n"));
-	sprintf(temp,"\tmovl\t$0, %%eax\n\tcall\tprintf\n");
+	temp = (char *)malloc(strlen("\tmovl\t$.LC%d, %%edi\n\tmovl\t$%d, %%eax\n\tcall\tprintf\n"));
+	sprintf(temp,"\tmovl\t$.LC%d, %%edi\n\tmovl\t$0, %%eax\n\tcall\tprintf\n",countString);
 	inmain = cat(inmain,temp);
 
 	//header
-	temp = (char *)malloc(strlen("\n.LC%d\n\t.string\t\""));
-	sprintf(temp,".LC%d\n\t.string\t\"",countString);
-	header = cat(header,temp);
+	if(notReg){
+		temp = (char *)malloc(strlen("\n.LC%d\n\t.string\t\""));
+		sprintf(temp,".LC%d\n\t.string\t\"",countString);
+		header = cat(header,temp);
+	}
+	else{
+		//.LC0:
+		//		.string	"%d"
+		temp = (char *)malloc(strlen("\n.LC%d\n\t.string\t\""));
+		sprintf(temp,".LC%d\n\t.string\t\"",countString);
+		header = cat(header,temp);
+	}
 
 	/*movl	-4(%rbp), %eax
 	movl	%eax, %esi
@@ -279,26 +285,27 @@ void SHOWSTRING(string* str)
 			sprintf(temp,"%%d");
 			header = cat(header,temp);
 			//inmain
-			temp = (char *)malloc(strlen("\tmovl\t%d(%%rbp), %%eax\n\tmovl\t%%eax, %%esi\n"));
-			sprintf(temp,"\tmovl\t%d(%%rbp), %%eax\n\tmovl\t%%eax, %%esi\n",((a[i+4]-'A')*7)+100);
+			/*
+			movl	-4(%rbp), %esi
+			movl	$.LC0, %edi
+			movl	$0, %eax
+			call	printf
+			*/
+			temp = (char *)malloc(strlen("\tmovl\t%d(%%rbp), %%esi\n"));
+			sprintf(temp,"\tmovl\t%d(%%rbp), %%esi\n",((a[i+4]-'A')*8)+200);
 			inmain = cat(inmain,temp);
 			i+=4;
 		}
 		else{
-			if(notNum){
-				temp = (char *)malloc(strlen("%%d")); // malloc for any character
-				//header
-				sprintf(temp,"%%d");
+				temp = (char *)malloc(strlen("c"));
+				sprintf(temp,"%c",a[i]);
 				header = cat(header,temp);
-			}
-			else{
-				temp = (char *)malloc(2);
-				sprintf(temp,"%%d");
-				header = cat(header,temp);
-			}
 		}
 		i++;
 	}
+
+
+
 	//header
 	temp = (char *)malloc(strlen("\"\n"));
 	sprintf(temp,"\"\n");
@@ -309,6 +316,12 @@ void SHOWSTRING(string* str)
 	movl	$0, %eax
 	call	printf
 	*/
+
+	temp = (char *)malloc(strlen("\tmovl\t$.LC%d, %%edi\n\tmovl\t$0,%%eax\n\tcall\tprintf\n"));
+	sprintf(temp,"\tmovl\t$.LC%d, %%edi\n\tmovl\t$0,%%eax\n\tcall\tprintf\n",countString);
+	inmain = cat(inmain,temp);
+
+
 
 	countString++;
 
