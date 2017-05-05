@@ -1,29 +1,30 @@
 	.file	"chello.c"
+	.def	__main;	.scl	2;	.type	32;	.endef
+	.section .rdata,"dr"
+.LC0:
+	.ascii "%d\0"
 	.text
 	.globl	main
-	.type	main, @function
+	.def	main;	.scl	2;	.type	32;	.endef
+	.seh_proc	main
 main:
-.LFB0:
-	.cfi_startproc
 	pushq	%rbp
-	.cfi_def_cfa_offset 16
-	.cfi_offset 6, -16
+	.seh_pushreg	%rbp
 	movq	%rsp, %rbp
-	.cfi_def_cfa_register 6
-	movl	$0, -8(%rbp)
-	movl	$5, -4(%rbp)
+	.seh_setframe	%rbp, 0
+	subq	$48, %rsp
+	.seh_stackalloc	48
+	.seh_endprologue
+	call	__main
+	movl	$8, -4(%rbp)
 	movl	-4(%rbp), %eax
-	subl	%eax, -8(%rbp)
-	movl	$-1, -8(%rbp)
-	movl	-8(%rbp), %eax
-	addl	$2, %eax
-	movl	%eax, -4(%rbp)
+	movl	%eax, %edx
+	leaq	.LC0(%rip), %rcx
+	call	printf
 	movl	$0, %eax
+	addq	$48, %rsp
 	popq	%rbp
-	.cfi_def_cfa 7, 8
 	ret
-	.cfi_endproc
-.LFE0:
-	.size	main, .-main
-	.ident	"GCC: (Ubuntu 5.4.0-6ubuntu1~16.04.4) 5.4.0 20160609"
-	.section	.note.GNU-stack,"",@progbits
+	.seh_endproc
+	.ident	"GCC: (GNU) 5.4.0"
+	.def	printf;	.scl	2;	.type	32;	.endef
