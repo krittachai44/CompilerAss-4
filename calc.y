@@ -82,7 +82,7 @@ input:		/* empty */
 | STRING { SHOWSTRING($1);
 	/*movl	$.LC0, %edi
 		movl	$0, %eax
-		call	printf*/ printf("%s\n",header); printf("%s\n",inmain ); printf("%s\n",inmain );}
+		call	printf*/ printf("%s\n",header); printf("%s\n",inmain );}
 | EXIT {return 4;}
 ;
 //char* temp = (char *)malloc(strlen("\taddl\t$%d,\t%d(%%rbp)"),$1,$2);
@@ -284,19 +284,19 @@ void SHOWSTRING(string* str)
 			i+=4;
 		}
 		else{
-				temp = (char *)malloc(strlen("c"));
-				sprintf(temp,"%c",a[i]);
-				header = cat(header,temp);
+			temp = (char *)malloc(strlen(1));
+			sprintf(temp,"%c",a[i]);
+			header = cat(header,temp);
 		}
 		i++;
 	}
 
-
-
-	//header
 	temp = (char *)malloc(strlen("\"\n"));
 	sprintf(temp,"\"\n");
 	header = cat(header,temp);
+
+	//header
+
 
 	/*
 	main	movl	$.LC0, %edi
@@ -304,9 +304,6 @@ void SHOWSTRING(string* str)
 	call	printf
 	*/
 
-	temp = (char *)malloc(strlen("\tmovl\t$.LC%d, %%edi\n\tmovl\t$0,%%eax\n\tcall\tprintf\n"));
-	sprintf(temp,"\tmovl\t$.LC%d, %%edi\n\tmovl\t$0,%%eax\n\tcall\tprintf\n",countString);
-	inmain = cat(inmain,temp);
 
 
 
