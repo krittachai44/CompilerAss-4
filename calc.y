@@ -79,7 +79,10 @@ input:		/* empty */
 | compare
 | loop
 | init	{printf("%s\n",inmain);}
-| STRING { SHOWSTRING($1); }
+| STRING { SHOWSTRING($1);
+	/*movl	$.LC0, %edi
+		movl	$0, %eax
+		call	printf*/ printf("%s\n",header); printf("%s\n",inmain ); }
 | EXIT {return 4;}
 ;
 //char* temp = (char *)malloc(strlen("\taddl\t$%d,\t%d(%%rbp)"),$1,$2);
@@ -127,9 +130,9 @@ condition:	exp COMPARE exp		{ $$ = $1== $3?1:0;}
 | exp '>' exp		{ $$ = $1 > $3?1:0;}
 ;
 
-compare:	IF '(' exp ')' '{' exp '}'  					{funtionIF($3,$6);}
-| IF '(' exp ')' '{' REGISTER INIT exp '}'  			{if($3){loadToReg($8,$6);}}
-| IF '(' exp ')' '{' exp '}' ELSE '{' exp '}'			{funtionIFELSE($3,$6,$10);}
+compare:	IF '(' exp ')' '{' exp '}'  				{ funtionIF($3,$6); }
+| IF '(' exp ')' '{' REGISTER INIT exp '}'  			{ if($3){loadToReg($8,$6);} }
+| IF '(' exp ')' '{' exp '}' ELSE '{' exp '}'			{ funtionIFELSE($3,$6,$10); }
 | IF '(' exp ')' '{' exp '}' ELSE '{' REGISTER INIT exp '}'
 { if($3) printf("%d\n",$6); else loadToReg($12,$10); }
 | IF '(' exp ')' '{' REGISTER INIT exp '}' ELSE '{' exp '}'
@@ -137,7 +140,7 @@ compare:	IF '(' exp ')' '{' exp '}'  					{funtionIF($3,$6);}
 | IF '(' exp ')' '{' REGISTER INIT exp '}' ELSE '{' REGISTER INIT exp '}'	{if($3){loadToReg($8,$6);}else{loadToReg($14,$12);}}
 ;
 
-loop:		FORWARD '(' exp ',' exp ')' 			{funtionLOOP($3,$5);}
+loop:		FORWARD '(' exp ',' exp ')' 			{ funtionLOOP($3,$5);}
 			| FORWARD'('exp ',' FORWARD'('exp','exp')'')'
 													{ int i = 0 ; for(;i<$3;i++) funtionLOOP($7,$9); }
 ;
@@ -223,16 +226,16 @@ void SHOWSTRING(string* str)
 {
 	char a[100];
 	strcpy(a,(*str).c_str());
-	// int notNum = 0;
-	// int len = strlen((*str).c_str());
+	int notNum = 0;
+	int len = strlen((*str).c_str());
 	int i;
-	// for (i = 7; i < len; i++)
-    // {
-    //     if (!isdigit(a[i])) {
-	// 		notNum = 1;
-	// 		break;
-	// 	}
-    // }
+	for (i = 7; i < len; i++)
+    {
+        if (!isdigit(a[i])) {
+			notNum = 1;
+			break;
+		}
+    }
 
 	a[(*str).length()+1] = '^';
 
@@ -241,89 +244,87 @@ void SHOWSTRING(string* str)
 	.string	"xxx"
 
 	*/
-	// char* temp = (char *)malloc(strlen("\n\tmovl\t$.LC%d, %%edi\n"));
-	// sprintf(temp,"\tmovl\t$.LC%d, %%edi\n",countString);
-	// inmain = cat(inmain,temp);
-	//
-	// temp = (char *)malloc(strlen("\tmovl\t$%d, %%eax\n\tcall\tprintf\n"));
-	// sprintf(temp,"\tmovl\t$0, %%eax\n\tcall\tprintf\n");
-	// inmain = cat(inmain,temp);
-	//
-	// //header
-	// temp = (char *)malloc(strlen("\n.LC%d\n\t.string\t\""));
-	// sprintf(temp,".LC%d\n\t.string\t\"",countString);
-	// header = cat(header,temp);
-	//
-	// /*movl	-4(%rbp), %eax
-	// movl	%eax, %esi
-	// movl	$.LC0, %edi
-	// movl	$0, %eax
-	// call	printf*/
-	//
-	// i = 7;
-	// while(a[i] != '^')
-	// {
-	// 	if(a[i]=='N'&&a[i+1]=='E'&&a[i+2]=='W'&&a[i+3]=='L'&&a[i+4]=='I'&&a[i+5]=='N'&&a[i+6]=='E'){
-	// 		//header
-	// 		temp = (char *)malloc(strlen("\n"));
-	// 		sprintf(temp,"\n");
-	// 		header = cat(header,temp);
-	// 		i+=6;
-	// 	}
-	// 	else if( a[i]=='#'&&a[i+1]=='r'&&a[i+2]=='e'&&a[i+3]=='g'&&a[i+4]>='A'&&a[i+4]<='Z'){
-	// 		//header
-	// 		temp = (char *)malloc(2);
-	// 		sprintf(temp,"%%d");
-	// 		header = cat(header,temp);
-	// 		//inmain
-	// 		temp = (char *)malloc(strlen("\tmovl\t%d(%%rbp), %%eax\n\tmovl\t%%eax, %%esi\n"));
-	// 		sprintf(temp,"\tmovl\t%d(%%rbp), %%eax\n\tmovl\t%%eax, %%esi\n",((a[i+4]-'A')*7)+100);
-	// 		inmain = cat(inmain,temp);
-	// 		i+=4;
-	// 	}
-	// 	else{
-	// 		if(notNum){
-	// 			temp = (char *)malloc(strlen("%%d")); // malloc for any character
-	// 			//header
-	// 			sprintf(temp,"%%d");
-	// 			header = cat(header,temp);
-	// 		}
-	// 		else{
-	// 			temp = (char *)malloc(2);
-	// 			sprintf(temp,"%%d");
-	// 			header = cat(header,temp);
-	// 		}
-	// 	}
-	// 	i++;
-	// }
-	// //header
-	// temp = (char *)malloc(strlen("\"\n"));
-	// sprintf(temp,"\"\n");
-	// header = cat(header,temp);
-	//
-	// printf("%s",header);
-	// printf("%s",inmain);
+	char* temp = (char *)malloc(strlen("\n\tmovl\t$.LC%d, %%edi\n"));
+	sprintf(temp,"\tmovl\t$.LC%d, %%edi\n",countString);
+	inmain = cat(inmain,temp);
+
+	temp = (char *)malloc(strlen("\tmovl\t$%d, %%eax\n\tcall\tprintf\n"));
+	sprintf(temp,"\tmovl\t$0, %%eax\n\tcall\tprintf\n");
+	inmain = cat(inmain,temp);
+
+	//header
+	temp = (char *)malloc(strlen("\n.LC%d\n\t.string\t\""));
+	sprintf(temp,".LC%d\n\t.string\t\"",countString);
+	header = cat(header,temp);
+
+	/*movl	-4(%rbp), %eax
+	movl	%eax, %esi
+	movl	$.LC0, %edi
+	movl	$0, %eax
+	call	printf*/
+
+	i = 7;
+	while(a[i] != '^')
+	{
+		if(a[i]=='N'&&a[i+1]=='E'&&a[i+2]=='W'&&a[i+3]=='L'&&a[i+4]=='I'&&a[i+5]=='N'&&a[i+6]=='E'){
+			//header
+			temp = (char *)malloc(strlen("\n"));
+			sprintf(temp,"\n");
+			header = cat(header,temp);
+			i+=6;
+		}
+		else if( a[i]=='#'&&a[i+1]=='r'&&a[i+2]=='e'&&a[i+3]=='g'&&a[i+4]>='A'&&a[i+4]<='Z'){
+			//header
+			temp = (char *)malloc(2);
+			sprintf(temp,"%%d");
+			header = cat(header,temp);
+			//inmain
+			temp = (char *)malloc(strlen("\tmovl\t%d(%%rbp), %%eax\n\tmovl\t%%eax, %%esi\n"));
+			sprintf(temp,"\tmovl\t%d(%%rbp), %%eax\n\tmovl\t%%eax, %%esi\n",((a[i+4]-'A')*7)+100);
+			inmain = cat(inmain,temp);
+			i+=4;
+		}
+		else{
+			if(notNum){
+				temp = (char *)malloc(strlen("%%d")); // malloc for any character
+				//header
+				sprintf(temp,"%%d");
+				header = cat(header,temp);
+			}
+			else{
+				temp = (char *)malloc(2);
+				sprintf(temp,"%%d");
+				header = cat(header,temp);
+			}
+		}
+		i++;
+	}
+	//header
+	temp = (char *)malloc(strlen("\"\n"));
+	sprintf(temp,"\"\n");
+	header = cat(header,temp);
+
 	/*
 	main	movl	$.LC0, %edi
 	movl	$0, %eax
 	call	printf
 	*/
 
-	//countString++;
+	countString++;
 
-	i=7;
-	while(a[i] != '^'){
-		if(a[i]=='N'&&a[i+1]=='E'&&a[i+2]=='W'&&a[i+3]=='L'&&a[i+4]=='I'&&a[i+5]=='N'&&a[i+6]=='E'){
-			printf("\n");
-			i+=6;
-		}
-		else if( a[i]=='#'&&a[i+1]=='r'&&a[i+2]=='e'&&a[i+3]=='g'&&a[i+4]>='A'&&a[i+4]<='Z'){
-			printf("%d",reg[a[i+4]-'A']); i+=4;
-		}
-		else
-			printf("%c",a[i]);
-		i++;
-	}
+	// i=7;
+	// while(a[i] != '^'){
+	// 	if(a[i]=='N'&&a[i+1]=='E'&&a[i+2]=='W'&&a[i+3]=='L'&&a[i+4]=='I'&&a[i+5]=='N'&&a[i+6]=='E'){
+	// 		printf("\n");
+	// 		i+=6;
+	// 	}
+	// 	else if( a[i]=='#'&&a[i+1]=='r'&&a[i+2]=='e'&&a[i+3]=='g'&&a[i+4]>='A'&&a[i+4]<='Z'){
+	// 		printf("%d",reg[a[i+4]-'A']); i+=4;
+	// 	}
+	// 	else
+	// 		printf("%c",a[i]);
+	// 	i++;
+	// }
 	printf("\n");
 }
 
