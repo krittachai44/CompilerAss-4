@@ -144,15 +144,17 @@ void addtoReg(string* in){
 	sprintf(temp,"movl	$%d, r%d",r[cReg],cReg);
 	inmain = cat(inmain,temp);
 	cReg++;
+	printf("%s\n",inmain);
 }
 
 void addtoReg(int in){
 	r[cReg] = in;
-	
+
 	char* temp = (char *)malloc(strlen("movl	$%d, r%d"));
 	sprintf(temp,"movl	$%d, r%d",r[cReg],cReg);
 	inmain = cat(inmain,temp);
 	cReg++;
+	printf("%s\n",inmain);
 }
 
 void funtionIF(int con,int stat1)
