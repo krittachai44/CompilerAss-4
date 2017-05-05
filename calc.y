@@ -108,7 +108,14 @@ exp:		REGISTER 	{ addtoReg($1); $$ = regToInt($1);}
 				cReg = 1; r[0] = $$;}
 | exp DIV exp	{ $$ = $1 / $3; cReg = 1; r[0] = $$;}
 | exp MOD exp	{ $$ = $1 % $3; cReg = 1; r[0] = $$;}
-| MINUS exp  %prec NEG { $$ = -$2;}
+| MINUS exp  %prec NEG { 	$$ = -$2;
+							r[cReg] = 0-$2;
+
+							char* temp = (char *)malloc(strlen("	movl	$%d, r%d\n"));
+							sprintf(temp,"	movl	$%d, r%d\n",r[cReg],cReg);
+							inmain = cat(inmain,temp);
+							cReg++;
+						}
 | '(' exp ')'        { $$ = $2;}
 | condition
 | command
