@@ -222,6 +222,7 @@ void SHOWSTRING(string* str)
 	strcpy(a,(*str).c_str());
 	int notNum = 0;
 	int len = strlen((*str).c_str());
+	int i;
 	for (i = 7; i < len; i++)
     {
         if (!isdigit(a[i])) {
@@ -232,7 +233,7 @@ void SHOWSTRING(string* str)
 	printf("\t\t%d\n",notNum);
 	a[(*str).length()+1] = '^';
 
-	int i;
+
 	for (i = 7; i < len; i++)
     {
         if (!isdigit(a[i])) {
