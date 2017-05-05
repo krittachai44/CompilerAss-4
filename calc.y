@@ -86,11 +86,11 @@ input:		/* empty */
 exp:		REGISTER 	{ addtoReg($1); printf("%s\n",inmain); $$ = regToInt($1);}
 // movl	-8(%rbp), %eax
 |INTEGER_LITERAL{ addtoReg($1); printf("%s\n",inmain); $$ = $1; }
-| exp PLUS exp	{ $$ = $1 + $3; cReg = 1;}
-| exp MINUS exp	{ $$ = $1 - $3; cReg = 1;}
-| exp MULT exp	{ $$ = $1 * $3; cReg = 1;}
-| exp DIV exp	{ $$ = $1 / $3; cReg = 1;}
-| exp MOD exp	{ $$ = $1 % $3; cReg = 1;}
+| exp PLUS exp	{ $$ = $1 + $3; cReg = 1; r[0] = $$;}
+| exp MINUS exp	{ $$ = $1 - $3; cReg = 1; r[0] = $$;}
+| exp MULT exp	{ $$ = $1 * $3; cReg = 1; r[0] = $$;}
+| exp DIV exp	{ $$ = $1 / $3; cReg = 1; r[0] = $$;}
+| exp MOD exp	{ $$ = $1 % $3; cReg = 1; r[0] = $$;}
 | MINUS exp  %prec NEG { $$ = -$2;}
 | '(' exp ')'        { $$ = $2;}
 | condition
