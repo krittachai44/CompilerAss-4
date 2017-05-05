@@ -112,7 +112,7 @@ exp:		REGISTER 	{ addtoReg($1); $$ = regToInt($1);}
 							cReg--;
 							int tempR = r[cReg]*2;
 
-							char* temp = (char *)malloc(strlen("	subl	$%d, r%d\n"))
+							char* temp = (char *)malloc(strlen("	subl	$%d, r%d\n"));
 							sprintf(temp,"	subl	$%d, r%d\n",tempR,cReg);
 							inmain = cat(inmain,temp);
 							cReg++;
