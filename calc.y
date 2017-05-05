@@ -107,7 +107,7 @@ exp:		REGISTER 	{ addtoReg($1); $$ = regToInt($1);}
 				// imull	-4(%rbp), %eax
 
 				char* temp = (char *)malloc(strlen("\timul	r1, r0\n"));
-				sprintf(temp,"\timul	r1, r0\n");
+				sprintf(temp,"\timul	r1, r0\n\n");
 				inmain = cat(inmain,temp);
 
 				cReg = 1; r[0] = $$;}
@@ -119,7 +119,7 @@ exp:		REGISTER 	{ addtoReg($1); $$ = regToInt($1);}
 				movl	%eax, -8(%rbp)
 				*/
 				char* temp = (char *)malloc(strlen("	movl	r0, %%eax\n\tcltd\n\tidivl	r1\n\tmovl\t%%eax, r0\n"));
-				sprintf(temp,"	movl	r0, %%eax\n\tcltd\n\tidivl	r1\n\tmovl\t%%eax, r0\n");
+				sprintf(temp,"	movl	r0, %%eax\n\tcltd\n\tidivl	r1\n\tmovl\t%%eax, r0\n\n");
 				inmain = cat(inmain,temp);
 				}
 | exp MOD exp	{ $$ = $1 % $3; cReg = 1; r[0] = $$;}
