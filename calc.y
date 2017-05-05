@@ -87,15 +87,15 @@ exp:		REGISTER 	{ addtoReg($1); printf("%s\n",inmain); $$ = regToInt($1);}
 // movl	-8(%rbp), %eax
 |INTEGER_LITERAL{ addtoReg($1); printf("%s\n",inmain); $$ = $1; }
 | exp PLUS exp	{ $$ = $1 + $3;
-				char* temp = (char *)malloc(strlen("addl	r1, r0\n"));
-				sprintf(temp,"addl	r1, r0\n");
+				char* temp = (char *)malloc(strlen("	addl	r1, r0\n"));
+				sprintf(temp,"	addl	r1, r0\n");
 				inmain = cat(inmain,temp);
 
 				cReg = 1; r[0] = $$;
 				}
 | exp MINUS exp	{ $$ = $1 - $3;
-				char* temp = (char *)malloc(strlen("subl	r1, r0\n"));
-				sprintf(temp,"subl	r1, r0\n");
+				char* temp = (char *)malloc(strlen("	subl	r1, r0\n"));
+				sprintf(temp,"	subl	r1, r0\n");
 				inmain = cat(inmain,temp);
 
 				cReg = 1; r[0] = $$;
@@ -157,8 +157,8 @@ void addtoReg(string* in){
 	strcpy(a,(*in).c_str());
 	r[cReg]=reg[a[4]-'A'];
 
-	char* temp = (char *)malloc(strlen("movl	$%d, r%d\n"));
-	sprintf(temp,"movl	$%d, r%d\n",r[cReg],cReg);
+	char* temp = (char *)malloc(strlen("	movl	$%d, r%d\n"));
+	sprintf(temp,"	movl	$%d, r%d\n",r[cReg],cReg);
 	inmain = cat(inmain,temp);
 	cReg++;
 }
@@ -166,8 +166,8 @@ void addtoReg(string* in){
 void addtoReg(int in){
 	r[cReg] = in;
 
-	char* temp = (char *)malloc(strlen("movl	$%d, r%d\n"));
-	sprintf(temp,"movl	$%d, r%d\n",r[cReg],cReg);
+	char* temp = (char *)malloc(strlen("	movl	$%d, r%d\n"));
+	sprintf(temp,"	movl	$%d, r%d\n",r[cReg],cReg);
 	inmain = cat(inmain,temp);
 	cReg++;
 }
