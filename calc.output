@@ -1,0 +1,1458 @@
+State 22 conflicts: 10 shift/reduce
+State 23 conflicts: 2 shift/reduce
+State 24 conflicts: 2 shift/reduce
+State 41 conflicts: 2 shift/reduce
+State 42 conflicts: 2 shift/reduce
+State 43 conflicts: 2 shift/reduce
+State 44 conflicts: 2 shift/reduce
+State 45 conflicts: 2 shift/reduce
+State 46 conflicts: 2 shift/reduce
+State 47 conflicts: 2 shift/reduce
+State 48 conflicts: 2 shift/reduce
+State 49 conflicts: 10 shift/reduce
+State 50 conflicts: 10 shift/reduce
+
+
+Grammar
+
+    0 $accept: input $end
+
+    1 input: %empty
+    2      | exp
+    3      | compare
+    4      | loop
+    5      | init
+    6      | STRING
+    7      | EXIT
+
+    8 exp: REGISTER
+    9    | INTEGER_LITERAL
+   10    | exp PLUS exp
+   11    | exp MINUS exp
+   12    | exp MULT exp
+   13    | exp DIV exp
+   14    | exp MOD exp
+   15    | exp OR exp
+   16    | exp AND exp
+   17    | NOT exp
+   18    | MINUS exp
+   19    | '(' exp ')'
+   20    | condition
+   21    | command
+
+   22 condition: exp COMPARE exp
+   23          | exp '<' exp
+   24          | exp '>' exp
+
+   25 compare: IF '(' exp ')' '{' exp '}'
+   26        | IF '(' exp ')' '{' REGISTER INIT exp '}'
+   27        | IF '(' exp ')' '{' exp '}' ELSE '{' exp '}'
+   28        | IF '(' exp ')' '{' exp '}' ELSE '{' REGISTER INIT exp '}'
+   29        | IF '(' exp ')' '{' REGISTER INIT exp '}' ELSE '{' exp '}'
+   30        | IF '(' exp ')' '{' REGISTER INIT exp '}' ELSE '{' REGISTER INIT exp '}'
+
+   31 loop: FORWARD '(' exp ',' exp ')'
+
+   32 command: SHOW_DEC exp
+
+   33 init: REGISTER INIT exp
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+'(' (40) 19 25 26 27 28 29 30 31
+')' (41) 19 25 26 27 28 29 30 31
+',' (44) 31
+'<' (60) 23
+'>' (62) 24
+'{' (123) 25 26 27 28 29 30
+'}' (125) 25 26 27 28 29 30
+error (256)
+INTEGER_LITERAL (258) 9
+REGISTER (259) 8 26 28 29 30 33
+STRING (260) 6
+IF (261) 25 26 27 28 29 30
+ELSE (262) 27 28 29 30
+FORWARD (263) 31
+INIT (264) 26 28 29 30 33
+SHOW_DEC (265) 32
+PLUS (266) 10
+MINUS (267) 11 18
+MULT (268) 12
+DIV (269) 13
+MOD (270) 14
+COMPARE (271) 22
+OR (272) 15
+AND (273) 16
+NOT (274) 17
+NEG (275)
+EXIT (276) 7
+
+
+Nonterminals, with rules where they appear
+
+$accept (29)
+    on left: 0
+input (30)
+    on left: 1 2 3 4 5 6 7, on right: 0
+exp (31)
+    on left: 8 9 10 11 12 13 14 15 16 17 18 19 20 21, on right: 2 10
+    11 12 13 14 15 16 17 18 19 22 23 24 25 26 27 28 29 30 31 32 33
+condition (32)
+    on left: 22 23 24, on right: 20
+compare (33)
+    on left: 25 26 27 28 29 30, on right: 3
+loop (34)
+    on left: 31, on right: 4
+command (35)
+    on left: 32, on right: 21
+init (36)
+    on left: 33, on right: 5
+
+
+State 0
+
+    0 $accept: . input $end
+
+    INTEGER_LITERAL  shift, and go to state 1
+    REGISTER         shift, and go to state 2
+    STRING           shift, and go to state 3
+    IF               shift, and go to state 4
+    FORWARD          shift, and go to state 5
+    SHOW_DEC         shift, and go to state 6
+    MINUS            shift, and go to state 7
+    NOT              shift, and go to state 8
+    EXIT             shift, and go to state 9
+    '('              shift, and go to state 10
+
+    $default  reduce using rule 1 (input)
+
+    input      go to state 11
+    exp        go to state 12
+    condition  go to state 13
+    compare    go to state 14
+    loop       go to state 15
+    command    go to state 16
+    init       go to state 17
+
+
+State 1
+
+    9 exp: INTEGER_LITERAL .
+
+    $default  reduce using rule 9 (exp)
+
+
+State 2
+
+    8 exp: REGISTER .
+   33 init: REGISTER . INIT exp
+
+    INIT  shift, and go to state 18
+
+    $default  reduce using rule 8 (exp)
+
+
+State 3
+
+    6 input: STRING .
+
+    $default  reduce using rule 6 (input)
+
+
+State 4
+
+   25 compare: IF . '(' exp ')' '{' exp '}'
+   26        | IF . '(' exp ')' '{' REGISTER INIT exp '}'
+   27        | IF . '(' exp ')' '{' exp '}' ELSE '{' exp '}'
+   28        | IF . '(' exp ')' '{' exp '}' ELSE '{' REGISTER INIT exp '}'
+   29        | IF . '(' exp ')' '{' REGISTER INIT exp '}' ELSE '{' exp '}'
+   30        | IF . '(' exp ')' '{' REGISTER INIT exp '}' ELSE '{' REGISTER INIT exp '}'
+
+    '('  shift, and go to state 19
+
+
+State 5
+
+   31 loop: FORWARD . '(' exp ',' exp ')'
+
+    '('  shift, and go to state 20
+
+
+State 6
+
+   32 command: SHOW_DEC . exp
+
+    INTEGER_LITERAL  shift, and go to state 1
+    REGISTER         shift, and go to state 21
+    SHOW_DEC         shift, and go to state 6
+    MINUS            shift, and go to state 7
+    NOT              shift, and go to state 8
+    '('              shift, and go to state 10
+
+    exp        go to state 22
+    condition  go to state 13
+    command    go to state 16
+
+
+State 7
+
+   18 exp: MINUS . exp
+
+    INTEGER_LITERAL  shift, and go to state 1
+    REGISTER         shift, and go to state 21
+    SHOW_DEC         shift, and go to state 6
+    MINUS            shift, and go to state 7
+    NOT              shift, and go to state 8
+    '('              shift, and go to state 10
+
+    exp        go to state 23
+    condition  go to state 13
+    command    go to state 16
+
+
+State 8
+
+   17 exp: NOT . exp
+
+    INTEGER_LITERAL  shift, and go to state 1
+    REGISTER         shift, and go to state 21
+    SHOW_DEC         shift, and go to state 6
+    MINUS            shift, and go to state 7
+    NOT              shift, and go to state 8
+    '('              shift, and go to state 10
+
+    exp        go to state 24
+    condition  go to state 13
+    command    go to state 16
+
+
+State 9
+
+    7 input: EXIT .
+
+    $default  reduce using rule 7 (input)
+
+
+State 10
+
+   19 exp: '(' . exp ')'
+
+    INTEGER_LITERAL  shift, and go to state 1
+    REGISTER         shift, and go to state 21
+    SHOW_DEC         shift, and go to state 6
+    MINUS            shift, and go to state 7
+    NOT              shift, and go to state 8
+    '('              shift, and go to state 10
+
+    exp        go to state 25
+    condition  go to state 13
+    command    go to state 16
+
+
+State 11
+
+    0 $accept: input . $end
+
+    $end  shift, and go to state 26
+
+
+State 12
+
+    2 input: exp .
+   10 exp: exp . PLUS exp
+   11    | exp . MINUS exp
+   12    | exp . MULT exp
+   13    | exp . DIV exp
+   14    | exp . MOD exp
+   15    | exp . OR exp
+   16    | exp . AND exp
+   22 condition: exp . COMPARE exp
+   23          | exp . '<' exp
+   24          | exp . '>' exp
+
+    PLUS     shift, and go to state 27
+    MINUS    shift, and go to state 28
+    MULT     shift, and go to state 29
+    DIV      shift, and go to state 30
+    MOD      shift, and go to state 31
+    COMPARE  shift, and go to state 32
+    OR       shift, and go to state 33
+    AND      shift, and go to state 34
+    '<'      shift, and go to state 35
+    '>'      shift, and go to state 36
+
+    $default  reduce using rule 2 (input)
+
+
+State 13
+
+   20 exp: condition .
+
+    $default  reduce using rule 20 (exp)
+
+
+State 14
+
+    3 input: compare .
+
+    $default  reduce using rule 3 (input)
+
+
+State 15
+
+    4 input: loop .
+
+    $default  reduce using rule 4 (input)
+
+
+State 16
+
+   21 exp: command .
+
+    $default  reduce using rule 21 (exp)
+
+
+State 17
+
+    5 input: init .
+
+    $default  reduce using rule 5 (input)
+
+
+State 18
+
+   33 init: REGISTER INIT . exp
+
+    INTEGER_LITERAL  shift, and go to state 1
+    REGISTER         shift, and go to state 21
+    SHOW_DEC         shift, and go to state 6
+    MINUS            shift, and go to state 7
+    NOT              shift, and go to state 8
+    '('              shift, and go to state 10
+
+    exp        go to state 37
+    condition  go to state 13
+    command    go to state 16
+
+
+State 19
+
+   25 compare: IF '(' . exp ')' '{' exp '}'
+   26        | IF '(' . exp ')' '{' REGISTER INIT exp '}'
+   27        | IF '(' . exp ')' '{' exp '}' ELSE '{' exp '}'
+   28        | IF '(' . exp ')' '{' exp '}' ELSE '{' REGISTER INIT exp '}'
+   29        | IF '(' . exp ')' '{' REGISTER INIT exp '}' ELSE '{' exp '}'
+   30        | IF '(' . exp ')' '{' REGISTER INIT exp '}' ELSE '{' REGISTER INIT exp '}'
+
+    INTEGER_LITERAL  shift, and go to state 1
+    REGISTER         shift, and go to state 21
+    SHOW_DEC         shift, and go to state 6
+    MINUS            shift, and go to state 7
+    NOT              shift, and go to state 8
+    '('              shift, and go to state 10
+
+    exp        go to state 38
+    condition  go to state 13
+    command    go to state 16
+
+
+State 20
+
+   31 loop: FORWARD '(' . exp ',' exp ')'
+
+    INTEGER_LITERAL  shift, and go to state 1
+    REGISTER         shift, and go to state 21
+    SHOW_DEC         shift, and go to state 6
+    MINUS            shift, and go to state 7
+    NOT              shift, and go to state 8
+    '('              shift, and go to state 10
+
+    exp        go to state 39
+    condition  go to state 13
+    command    go to state 16
+
+
+State 21
+
+    8 exp: REGISTER .
+
+    $default  reduce using rule 8 (exp)
+
+
+State 22
+
+   10 exp: exp . PLUS exp
+   11    | exp . MINUS exp
+   12    | exp . MULT exp
+   13    | exp . DIV exp
+   14    | exp . MOD exp
+   15    | exp . OR exp
+   16    | exp . AND exp
+   22 condition: exp . COMPARE exp
+   23          | exp . '<' exp
+   24          | exp . '>' exp
+   32 command: SHOW_DEC exp .
+
+    PLUS     shift, and go to state 27
+    MINUS    shift, and go to state 28
+    MULT     shift, and go to state 29
+    DIV      shift, and go to state 30
+    MOD      shift, and go to state 31
+    COMPARE  shift, and go to state 32
+    OR       shift, and go to state 33
+    AND      shift, and go to state 34
+    '<'      shift, and go to state 35
+    '>'      shift, and go to state 36
+
+    PLUS      [reduce using rule 32 (command)]
+    MINUS     [reduce using rule 32 (command)]
+    MULT      [reduce using rule 32 (command)]
+    DIV       [reduce using rule 32 (command)]
+    MOD       [reduce using rule 32 (command)]
+    COMPARE   [reduce using rule 32 (command)]
+    OR        [reduce using rule 32 (command)]
+    AND       [reduce using rule 32 (command)]
+    '<'       [reduce using rule 32 (command)]
+    '>'       [reduce using rule 32 (command)]
+    $default  reduce using rule 32 (command)
+
+
+State 23
+
+   10 exp: exp . PLUS exp
+   11    | exp . MINUS exp
+   12    | exp . MULT exp
+   13    | exp . DIV exp
+   14    | exp . MOD exp
+   15    | exp . OR exp
+   16    | exp . AND exp
+   18    | MINUS exp .
+   22 condition: exp . COMPARE exp
+   23          | exp . '<' exp
+   24          | exp . '>' exp
+
+    '<'  shift, and go to state 35
+    '>'  shift, and go to state 36
+
+    '<'       [reduce using rule 18 (exp)]
+    '>'       [reduce using rule 18 (exp)]
+    $default  reduce using rule 18 (exp)
+
+
+State 24
+
+   10 exp: exp . PLUS exp
+   11    | exp . MINUS exp
+   12    | exp . MULT exp
+   13    | exp . DIV exp
+   14    | exp . MOD exp
+   15    | exp . OR exp
+   16    | exp . AND exp
+   17    | NOT exp .
+   22 condition: exp . COMPARE exp
+   23          | exp . '<' exp
+   24          | exp . '>' exp
+
+    '<'  shift, and go to state 35
+    '>'  shift, and go to state 36
+
+    '<'       [reduce using rule 17 (exp)]
+    '>'       [reduce using rule 17 (exp)]
+    $default  reduce using rule 17 (exp)
+
+
+State 25
+
+   10 exp: exp . PLUS exp
+   11    | exp . MINUS exp
+   12    | exp . MULT exp
+   13    | exp . DIV exp
+   14    | exp . MOD exp
+   15    | exp . OR exp
+   16    | exp . AND exp
+   19    | '(' exp . ')'
+   22 condition: exp . COMPARE exp
+   23          | exp . '<' exp
+   24          | exp . '>' exp
+
+    PLUS     shift, and go to state 27
+    MINUS    shift, and go to state 28
+    MULT     shift, and go to state 29
+    DIV      shift, and go to state 30
+    MOD      shift, and go to state 31
+    COMPARE  shift, and go to state 32
+    OR       shift, and go to state 33
+    AND      shift, and go to state 34
+    ')'      shift, and go to state 40
+    '<'      shift, and go to state 35
+    '>'      shift, and go to state 36
+
+
+State 26
+
+    0 $accept: input $end .
+
+    $default  accept
+
+
+State 27
+
+   10 exp: exp PLUS . exp
+
+    INTEGER_LITERAL  shift, and go to state 1
+    REGISTER         shift, and go to state 21
+    SHOW_DEC         shift, and go to state 6
+    MINUS            shift, and go to state 7
+    NOT              shift, and go to state 8
+    '('              shift, and go to state 10
+
+    exp        go to state 41
+    condition  go to state 13
+    command    go to state 16
+
+
+State 28
+
+   11 exp: exp MINUS . exp
+
+    INTEGER_LITERAL  shift, and go to state 1
+    REGISTER         shift, and go to state 21
+    SHOW_DEC         shift, and go to state 6
+    MINUS            shift, and go to state 7
+    NOT              shift, and go to state 8
+    '('              shift, and go to state 10
+
+    exp        go to state 42
+    condition  go to state 13
+    command    go to state 16
+
+
+State 29
+
+   12 exp: exp MULT . exp
+
+    INTEGER_LITERAL  shift, and go to state 1
+    REGISTER         shift, and go to state 21
+    SHOW_DEC         shift, and go to state 6
+    MINUS            shift, and go to state 7
+    NOT              shift, and go to state 8
+    '('              shift, and go to state 10
+
+    exp        go to state 43
+    condition  go to state 13
+    command    go to state 16
+
+
+State 30
+
+   13 exp: exp DIV . exp
+
+    INTEGER_LITERAL  shift, and go to state 1
+    REGISTER         shift, and go to state 21
+    SHOW_DEC         shift, and go to state 6
+    MINUS            shift, and go to state 7
+    NOT              shift, and go to state 8
+    '('              shift, and go to state 10
+
+    exp        go to state 44
+    condition  go to state 13
+    command    go to state 16
+
+
+State 31
+
+   14 exp: exp MOD . exp
+
+    INTEGER_LITERAL  shift, and go to state 1
+    REGISTER         shift, and go to state 21
+    SHOW_DEC         shift, and go to state 6
+    MINUS            shift, and go to state 7
+    NOT              shift, and go to state 8
+    '('              shift, and go to state 10
+
+    exp        go to state 45
+    condition  go to state 13
+    command    go to state 16
+
+
+State 32
+
+   22 condition: exp COMPARE . exp
+
+    INTEGER_LITERAL  shift, and go to state 1
+    REGISTER         shift, and go to state 21
+    SHOW_DEC         shift, and go to state 6
+    MINUS            shift, and go to state 7
+    NOT              shift, and go to state 8
+    '('              shift, and go to state 10
+
+    exp        go to state 46
+    condition  go to state 13
+    command    go to state 16
+
+
+State 33
+
+   15 exp: exp OR . exp
+
+    INTEGER_LITERAL  shift, and go to state 1
+    REGISTER         shift, and go to state 21
+    SHOW_DEC         shift, and go to state 6
+    MINUS            shift, and go to state 7
+    NOT              shift, and go to state 8
+    '('              shift, and go to state 10
+
+    exp        go to state 47
+    condition  go to state 13
+    command    go to state 16
+
+
+State 34
+
+   16 exp: exp AND . exp
+
+    INTEGER_LITERAL  shift, and go to state 1
+    REGISTER         shift, and go to state 21
+    SHOW_DEC         shift, and go to state 6
+    MINUS            shift, and go to state 7
+    NOT              shift, and go to state 8
+    '('              shift, and go to state 10
+
+    exp        go to state 48
+    condition  go to state 13
+    command    go to state 16
+
+
+State 35
+
+   23 condition: exp '<' . exp
+
+    INTEGER_LITERAL  shift, and go to state 1
+    REGISTER         shift, and go to state 21
+    SHOW_DEC         shift, and go to state 6
+    MINUS            shift, and go to state 7
+    NOT              shift, and go to state 8
+    '('              shift, and go to state 10
+
+    exp        go to state 49
+    condition  go to state 13
+    command    go to state 16
+
+
+State 36
+
+   24 condition: exp '>' . exp
+
+    INTEGER_LITERAL  shift, and go to state 1
+    REGISTER         shift, and go to state 21
+    SHOW_DEC         shift, and go to state 6
+    MINUS            shift, and go to state 7
+    NOT              shift, and go to state 8
+    '('              shift, and go to state 10
+
+    exp        go to state 50
+    condition  go to state 13
+    command    go to state 16
+
+
+State 37
+
+   10 exp: exp . PLUS exp
+   11    | exp . MINUS exp
+   12    | exp . MULT exp
+   13    | exp . DIV exp
+   14    | exp . MOD exp
+   15    | exp . OR exp
+   16    | exp . AND exp
+   22 condition: exp . COMPARE exp
+   23          | exp . '<' exp
+   24          | exp . '>' exp
+   33 init: REGISTER INIT exp .
+
+    PLUS     shift, and go to state 27
+    MINUS    shift, and go to state 28
+    MULT     shift, and go to state 29
+    DIV      shift, and go to state 30
+    MOD      shift, and go to state 31
+    COMPARE  shift, and go to state 32
+    OR       shift, and go to state 33
+    AND      shift, and go to state 34
+    '<'      shift, and go to state 35
+    '>'      shift, and go to state 36
+
+    $default  reduce using rule 33 (init)
+
+
+State 38
+
+   10 exp: exp . PLUS exp
+   11    | exp . MINUS exp
+   12    | exp . MULT exp
+   13    | exp . DIV exp
+   14    | exp . MOD exp
+   15    | exp . OR exp
+   16    | exp . AND exp
+   22 condition: exp . COMPARE exp
+   23          | exp . '<' exp
+   24          | exp . '>' exp
+   25 compare: IF '(' exp . ')' '{' exp '}'
+   26        | IF '(' exp . ')' '{' REGISTER INIT exp '}'
+   27        | IF '(' exp . ')' '{' exp '}' ELSE '{' exp '}'
+   28        | IF '(' exp . ')' '{' exp '}' ELSE '{' REGISTER INIT exp '}'
+   29        | IF '(' exp . ')' '{' REGISTER INIT exp '}' ELSE '{' exp '}'
+   30        | IF '(' exp . ')' '{' REGISTER INIT exp '}' ELSE '{' REGISTER INIT exp '}'
+
+    PLUS     shift, and go to state 27
+    MINUS    shift, and go to state 28
+    MULT     shift, and go to state 29
+    DIV      shift, and go to state 30
+    MOD      shift, and go to state 31
+    COMPARE  shift, and go to state 32
+    OR       shift, and go to state 33
+    AND      shift, and go to state 34
+    ')'      shift, and go to state 51
+    '<'      shift, and go to state 35
+    '>'      shift, and go to state 36
+
+
+State 39
+
+   10 exp: exp . PLUS exp
+   11    | exp . MINUS exp
+   12    | exp . MULT exp
+   13    | exp . DIV exp
+   14    | exp . MOD exp
+   15    | exp . OR exp
+   16    | exp . AND exp
+   22 condition: exp . COMPARE exp
+   23          | exp . '<' exp
+   24          | exp . '>' exp
+   31 loop: FORWARD '(' exp . ',' exp ')'
+
+    PLUS     shift, and go to state 27
+    MINUS    shift, and go to state 28
+    MULT     shift, and go to state 29
+    DIV      shift, and go to state 30
+    MOD      shift, and go to state 31
+    COMPARE  shift, and go to state 32
+    OR       shift, and go to state 33
+    AND      shift, and go to state 34
+    '<'      shift, and go to state 35
+    '>'      shift, and go to state 36
+    ','      shift, and go to state 52
+
+
+State 40
+
+   19 exp: '(' exp ')' .
+
+    $default  reduce using rule 19 (exp)
+
+
+State 41
+
+   10 exp: exp . PLUS exp
+   10    | exp PLUS exp .
+   11    | exp . MINUS exp
+   12    | exp . MULT exp
+   13    | exp . DIV exp
+   14    | exp . MOD exp
+   15    | exp . OR exp
+   16    | exp . AND exp
+   22 condition: exp . COMPARE exp
+   23          | exp . '<' exp
+   24          | exp . '>' exp
+
+    MULT     shift, and go to state 29
+    DIV      shift, and go to state 30
+    MOD      shift, and go to state 31
+    COMPARE  shift, and go to state 32
+    OR       shift, and go to state 33
+    AND      shift, and go to state 34
+    '<'      shift, and go to state 35
+    '>'      shift, and go to state 36
+
+    '<'       [reduce using rule 10 (exp)]
+    '>'       [reduce using rule 10 (exp)]
+    $default  reduce using rule 10 (exp)
+
+
+State 42
+
+   10 exp: exp . PLUS exp
+   11    | exp . MINUS exp
+   11    | exp MINUS exp .
+   12    | exp . MULT exp
+   13    | exp . DIV exp
+   14    | exp . MOD exp
+   15    | exp . OR exp
+   16    | exp . AND exp
+   22 condition: exp . COMPARE exp
+   23          | exp . '<' exp
+   24          | exp . '>' exp
+
+    MULT     shift, and go to state 29
+    DIV      shift, and go to state 30
+    MOD      shift, and go to state 31
+    COMPARE  shift, and go to state 32
+    OR       shift, and go to state 33
+    AND      shift, and go to state 34
+    '<'      shift, and go to state 35
+    '>'      shift, and go to state 36
+
+    '<'       [reduce using rule 11 (exp)]
+    '>'       [reduce using rule 11 (exp)]
+    $default  reduce using rule 11 (exp)
+
+
+State 43
+
+   10 exp: exp . PLUS exp
+   11    | exp . MINUS exp
+   12    | exp . MULT exp
+   12    | exp MULT exp .
+   13    | exp . DIV exp
+   14    | exp . MOD exp
+   15    | exp . OR exp
+   16    | exp . AND exp
+   22 condition: exp . COMPARE exp
+   23          | exp . '<' exp
+   24          | exp . '>' exp
+
+    COMPARE  shift, and go to state 32
+    OR       shift, and go to state 33
+    AND      shift, and go to state 34
+    '<'      shift, and go to state 35
+    '>'      shift, and go to state 36
+
+    '<'       [reduce using rule 12 (exp)]
+    '>'       [reduce using rule 12 (exp)]
+    $default  reduce using rule 12 (exp)
+
+
+State 44
+
+   10 exp: exp . PLUS exp
+   11    | exp . MINUS exp
+   12    | exp . MULT exp
+   13    | exp . DIV exp
+   13    | exp DIV exp .
+   14    | exp . MOD exp
+   15    | exp . OR exp
+   16    | exp . AND exp
+   22 condition: exp . COMPARE exp
+   23          | exp . '<' exp
+   24          | exp . '>' exp
+
+    COMPARE  shift, and go to state 32
+    OR       shift, and go to state 33
+    AND      shift, and go to state 34
+    '<'      shift, and go to state 35
+    '>'      shift, and go to state 36
+
+    '<'       [reduce using rule 13 (exp)]
+    '>'       [reduce using rule 13 (exp)]
+    $default  reduce using rule 13 (exp)
+
+
+State 45
+
+   10 exp: exp . PLUS exp
+   11    | exp . MINUS exp
+   12    | exp . MULT exp
+   13    | exp . DIV exp
+   14    | exp . MOD exp
+   14    | exp MOD exp .
+   15    | exp . OR exp
+   16    | exp . AND exp
+   22 condition: exp . COMPARE exp
+   23          | exp . '<' exp
+   24          | exp . '>' exp
+
+    COMPARE  shift, and go to state 32
+    OR       shift, and go to state 33
+    AND      shift, and go to state 34
+    '<'      shift, and go to state 35
+    '>'      shift, and go to state 36
+
+    '<'       [reduce using rule 14 (exp)]
+    '>'       [reduce using rule 14 (exp)]
+    $default  reduce using rule 14 (exp)
+
+
+State 46
+
+   10 exp: exp . PLUS exp
+   11    | exp . MINUS exp
+   12    | exp . MULT exp
+   13    | exp . DIV exp
+   14    | exp . MOD exp
+   15    | exp . OR exp
+   16    | exp . AND exp
+   22 condition: exp . COMPARE exp
+   22          | exp COMPARE exp .
+   23          | exp . '<' exp
+   24          | exp . '>' exp
+
+    OR   shift, and go to state 33
+    AND  shift, and go to state 34
+    '<'  shift, and go to state 35
+    '>'  shift, and go to state 36
+
+    '<'       [reduce using rule 22 (condition)]
+    '>'       [reduce using rule 22 (condition)]
+    $default  reduce using rule 22 (condition)
+
+
+State 47
+
+   10 exp: exp . PLUS exp
+   11    | exp . MINUS exp
+   12    | exp . MULT exp
+   13    | exp . DIV exp
+   14    | exp . MOD exp
+   15    | exp . OR exp
+   15    | exp OR exp .
+   16    | exp . AND exp
+   22 condition: exp . COMPARE exp
+   23          | exp . '<' exp
+   24          | exp . '>' exp
+
+    AND  shift, and go to state 34
+    '<'  shift, and go to state 35
+    '>'  shift, and go to state 36
+
+    '<'       [reduce using rule 15 (exp)]
+    '>'       [reduce using rule 15 (exp)]
+    $default  reduce using rule 15 (exp)
+
+
+State 48
+
+   10 exp: exp . PLUS exp
+   11    | exp . MINUS exp
+   12    | exp . MULT exp
+   13    | exp . DIV exp
+   14    | exp . MOD exp
+   15    | exp . OR exp
+   16    | exp . AND exp
+   16    | exp AND exp .
+   22 condition: exp . COMPARE exp
+   23          | exp . '<' exp
+   24          | exp . '>' exp
+
+    '<'  shift, and go to state 35
+    '>'  shift, and go to state 36
+
+    '<'       [reduce using rule 16 (exp)]
+    '>'       [reduce using rule 16 (exp)]
+    $default  reduce using rule 16 (exp)
+
+
+State 49
+
+   10 exp: exp . PLUS exp
+   11    | exp . MINUS exp
+   12    | exp . MULT exp
+   13    | exp . DIV exp
+   14    | exp . MOD exp
+   15    | exp . OR exp
+   16    | exp . AND exp
+   22 condition: exp . COMPARE exp
+   23          | exp . '<' exp
+   23          | exp '<' exp .
+   24          | exp . '>' exp
+
+    PLUS     shift, and go to state 27
+    MINUS    shift, and go to state 28
+    MULT     shift, and go to state 29
+    DIV      shift, and go to state 30
+    MOD      shift, and go to state 31
+    COMPARE  shift, and go to state 32
+    OR       shift, and go to state 33
+    AND      shift, and go to state 34
+    '<'      shift, and go to state 35
+    '>'      shift, and go to state 36
+
+    PLUS      [reduce using rule 23 (condition)]
+    MINUS     [reduce using rule 23 (condition)]
+    MULT      [reduce using rule 23 (condition)]
+    DIV       [reduce using rule 23 (condition)]
+    MOD       [reduce using rule 23 (condition)]
+    COMPARE   [reduce using rule 23 (condition)]
+    OR        [reduce using rule 23 (condition)]
+    AND       [reduce using rule 23 (condition)]
+    '<'       [reduce using rule 23 (condition)]
+    '>'       [reduce using rule 23 (condition)]
+    $default  reduce using rule 23 (condition)
+
+
+State 50
+
+   10 exp: exp . PLUS exp
+   11    | exp . MINUS exp
+   12    | exp . MULT exp
+   13    | exp . DIV exp
+   14    | exp . MOD exp
+   15    | exp . OR exp
+   16    | exp . AND exp
+   22 condition: exp . COMPARE exp
+   23          | exp . '<' exp
+   24          | exp . '>' exp
+   24          | exp '>' exp .
+
+    PLUS     shift, and go to state 27
+    MINUS    shift, and go to state 28
+    MULT     shift, and go to state 29
+    DIV      shift, and go to state 30
+    MOD      shift, and go to state 31
+    COMPARE  shift, and go to state 32
+    OR       shift, and go to state 33
+    AND      shift, and go to state 34
+    '<'      shift, and go to state 35
+    '>'      shift, and go to state 36
+
+    PLUS      [reduce using rule 24 (condition)]
+    MINUS     [reduce using rule 24 (condition)]
+    MULT      [reduce using rule 24 (condition)]
+    DIV       [reduce using rule 24 (condition)]
+    MOD       [reduce using rule 24 (condition)]
+    COMPARE   [reduce using rule 24 (condition)]
+    OR        [reduce using rule 24 (condition)]
+    AND       [reduce using rule 24 (condition)]
+    '<'       [reduce using rule 24 (condition)]
+    '>'       [reduce using rule 24 (condition)]
+    $default  reduce using rule 24 (condition)
+
+
+State 51
+
+   25 compare: IF '(' exp ')' . '{' exp '}'
+   26        | IF '(' exp ')' . '{' REGISTER INIT exp '}'
+   27        | IF '(' exp ')' . '{' exp '}' ELSE '{' exp '}'
+   28        | IF '(' exp ')' . '{' exp '}' ELSE '{' REGISTER INIT exp '}'
+   29        | IF '(' exp ')' . '{' REGISTER INIT exp '}' ELSE '{' exp '}'
+   30        | IF '(' exp ')' . '{' REGISTER INIT exp '}' ELSE '{' REGISTER INIT exp '}'
+
+    '{'  shift, and go to state 53
+
+
+State 52
+
+   31 loop: FORWARD '(' exp ',' . exp ')'
+
+    INTEGER_LITERAL  shift, and go to state 1
+    REGISTER         shift, and go to state 21
+    SHOW_DEC         shift, and go to state 6
+    MINUS            shift, and go to state 7
+    NOT              shift, and go to state 8
+    '('              shift, and go to state 10
+
+    exp        go to state 54
+    condition  go to state 13
+    command    go to state 16
+
+
+State 53
+
+   25 compare: IF '(' exp ')' '{' . exp '}'
+   26        | IF '(' exp ')' '{' . REGISTER INIT exp '}'
+   27        | IF '(' exp ')' '{' . exp '}' ELSE '{' exp '}'
+   28        | IF '(' exp ')' '{' . exp '}' ELSE '{' REGISTER INIT exp '}'
+   29        | IF '(' exp ')' '{' . REGISTER INIT exp '}' ELSE '{' exp '}'
+   30        | IF '(' exp ')' '{' . REGISTER INIT exp '}' ELSE '{' REGISTER INIT exp '}'
+
+    INTEGER_LITERAL  shift, and go to state 1
+    REGISTER         shift, and go to state 55
+    SHOW_DEC         shift, and go to state 6
+    MINUS            shift, and go to state 7
+    NOT              shift, and go to state 8
+    '('              shift, and go to state 10
+
+    exp        go to state 56
+    condition  go to state 13
+    command    go to state 16
+
+
+State 54
+
+   10 exp: exp . PLUS exp
+   11    | exp . MINUS exp
+   12    | exp . MULT exp
+   13    | exp . DIV exp
+   14    | exp . MOD exp
+   15    | exp . OR exp
+   16    | exp . AND exp
+   22 condition: exp . COMPARE exp
+   23          | exp . '<' exp
+   24          | exp . '>' exp
+   31 loop: FORWARD '(' exp ',' exp . ')'
+
+    PLUS     shift, and go to state 27
+    MINUS    shift, and go to state 28
+    MULT     shift, and go to state 29
+    DIV      shift, and go to state 30
+    MOD      shift, and go to state 31
+    COMPARE  shift, and go to state 32
+    OR       shift, and go to state 33
+    AND      shift, and go to state 34
+    ')'      shift, and go to state 57
+    '<'      shift, and go to state 35
+    '>'      shift, and go to state 36
+
+
+State 55
+
+    8 exp: REGISTER .
+   26 compare: IF '(' exp ')' '{' REGISTER . INIT exp '}'
+   29        | IF '(' exp ')' '{' REGISTER . INIT exp '}' ELSE '{' exp '}'
+   30        | IF '(' exp ')' '{' REGISTER . INIT exp '}' ELSE '{' REGISTER INIT exp '}'
+
+    INIT  shift, and go to state 58
+
+    $default  reduce using rule 8 (exp)
+
+
+State 56
+
+   10 exp: exp . PLUS exp
+   11    | exp . MINUS exp
+   12    | exp . MULT exp
+   13    | exp . DIV exp
+   14    | exp . MOD exp
+   15    | exp . OR exp
+   16    | exp . AND exp
+   22 condition: exp . COMPARE exp
+   23          | exp . '<' exp
+   24          | exp . '>' exp
+   25 compare: IF '(' exp ')' '{' exp . '}'
+   27        | IF '(' exp ')' '{' exp . '}' ELSE '{' exp '}'
+   28        | IF '(' exp ')' '{' exp . '}' ELSE '{' REGISTER INIT exp '}'
+
+    PLUS     shift, and go to state 27
+    MINUS    shift, and go to state 28
+    MULT     shift, and go to state 29
+    DIV      shift, and go to state 30
+    MOD      shift, and go to state 31
+    COMPARE  shift, and go to state 32
+    OR       shift, and go to state 33
+    AND      shift, and go to state 34
+    '<'      shift, and go to state 35
+    '>'      shift, and go to state 36
+    '}'      shift, and go to state 59
+
+
+State 57
+
+   31 loop: FORWARD '(' exp ',' exp ')' .
+
+    $default  reduce using rule 31 (loop)
+
+
+State 58
+
+   26 compare: IF '(' exp ')' '{' REGISTER INIT . exp '}'
+   29        | IF '(' exp ')' '{' REGISTER INIT . exp '}' ELSE '{' exp '}'
+   30        | IF '(' exp ')' '{' REGISTER INIT . exp '}' ELSE '{' REGISTER INIT exp '}'
+
+    INTEGER_LITERAL  shift, and go to state 1
+    REGISTER         shift, and go to state 21
+    SHOW_DEC         shift, and go to state 6
+    MINUS            shift, and go to state 7
+    NOT              shift, and go to state 8
+    '('              shift, and go to state 10
+
+    exp        go to state 60
+    condition  go to state 13
+    command    go to state 16
+
+
+State 59
+
+   25 compare: IF '(' exp ')' '{' exp '}' .
+   27        | IF '(' exp ')' '{' exp '}' . ELSE '{' exp '}'
+   28        | IF '(' exp ')' '{' exp '}' . ELSE '{' REGISTER INIT exp '}'
+
+    ELSE  shift, and go to state 61
+
+    $default  reduce using rule 25 (compare)
+
+
+State 60
+
+   10 exp: exp . PLUS exp
+   11    | exp . MINUS exp
+   12    | exp . MULT exp
+   13    | exp . DIV exp
+   14    | exp . MOD exp
+   15    | exp . OR exp
+   16    | exp . AND exp
+   22 condition: exp . COMPARE exp
+   23          | exp . '<' exp
+   24          | exp . '>' exp
+   26 compare: IF '(' exp ')' '{' REGISTER INIT exp . '}'
+   29        | IF '(' exp ')' '{' REGISTER INIT exp . '}' ELSE '{' exp '}'
+   30        | IF '(' exp ')' '{' REGISTER INIT exp . '}' ELSE '{' REGISTER INIT exp '}'
+
+    PLUS     shift, and go to state 27
+    MINUS    shift, and go to state 28
+    MULT     shift, and go to state 29
+    DIV      shift, and go to state 30
+    MOD      shift, and go to state 31
+    COMPARE  shift, and go to state 32
+    OR       shift, and go to state 33
+    AND      shift, and go to state 34
+    '<'      shift, and go to state 35
+    '>'      shift, and go to state 36
+    '}'      shift, and go to state 62
+
+
+State 61
+
+   27 compare: IF '(' exp ')' '{' exp '}' ELSE . '{' exp '}'
+   28        | IF '(' exp ')' '{' exp '}' ELSE . '{' REGISTER INIT exp '}'
+
+    '{'  shift, and go to state 63
+
+
+State 62
+
+   26 compare: IF '(' exp ')' '{' REGISTER INIT exp '}' .
+   29        | IF '(' exp ')' '{' REGISTER INIT exp '}' . ELSE '{' exp '}'
+   30        | IF '(' exp ')' '{' REGISTER INIT exp '}' . ELSE '{' REGISTER INIT exp '}'
+
+    ELSE  shift, and go to state 64
+
+    $default  reduce using rule 26 (compare)
+
+
+State 63
+
+   27 compare: IF '(' exp ')' '{' exp '}' ELSE '{' . exp '}'
+   28        | IF '(' exp ')' '{' exp '}' ELSE '{' . REGISTER INIT exp '}'
+
+    INTEGER_LITERAL  shift, and go to state 1
+    REGISTER         shift, and go to state 65
+    SHOW_DEC         shift, and go to state 6
+    MINUS            shift, and go to state 7
+    NOT              shift, and go to state 8
+    '('              shift, and go to state 10
+
+    exp        go to state 66
+    condition  go to state 13
+    command    go to state 16
+
+
+State 64
+
+   29 compare: IF '(' exp ')' '{' REGISTER INIT exp '}' ELSE . '{' exp '}'
+   30        | IF '(' exp ')' '{' REGISTER INIT exp '}' ELSE . '{' REGISTER INIT exp '}'
+
+    '{'  shift, and go to state 67
+
+
+State 65
+
+    8 exp: REGISTER .
+   28 compare: IF '(' exp ')' '{' exp '}' ELSE '{' REGISTER . INIT exp '}'
+
+    INIT  shift, and go to state 68
+
+    $default  reduce using rule 8 (exp)
+
+
+State 66
+
+   10 exp: exp . PLUS exp
+   11    | exp . MINUS exp
+   12    | exp . MULT exp
+   13    | exp . DIV exp
+   14    | exp . MOD exp
+   15    | exp . OR exp
+   16    | exp . AND exp
+   22 condition: exp . COMPARE exp
+   23          | exp . '<' exp
+   24          | exp . '>' exp
+   27 compare: IF '(' exp ')' '{' exp '}' ELSE '{' exp . '}'
+
+    PLUS     shift, and go to state 27
+    MINUS    shift, and go to state 28
+    MULT     shift, and go to state 29
+    DIV      shift, and go to state 30
+    MOD      shift, and go to state 31
+    COMPARE  shift, and go to state 32
+    OR       shift, and go to state 33
+    AND      shift, and go to state 34
+    '<'      shift, and go to state 35
+    '>'      shift, and go to state 36
+    '}'      shift, and go to state 69
+
+
+State 67
+
+   29 compare: IF '(' exp ')' '{' REGISTER INIT exp '}' ELSE '{' . exp '}'
+   30        | IF '(' exp ')' '{' REGISTER INIT exp '}' ELSE '{' . REGISTER INIT exp '}'
+
+    INTEGER_LITERAL  shift, and go to state 1
+    REGISTER         shift, and go to state 70
+    SHOW_DEC         shift, and go to state 6
+    MINUS            shift, and go to state 7
+    NOT              shift, and go to state 8
+    '('              shift, and go to state 10
+
+    exp        go to state 71
+    condition  go to state 13
+    command    go to state 16
+
+
+State 68
+
+   28 compare: IF '(' exp ')' '{' exp '}' ELSE '{' REGISTER INIT . exp '}'
+
+    INTEGER_LITERAL  shift, and go to state 1
+    REGISTER         shift, and go to state 21
+    SHOW_DEC         shift, and go to state 6
+    MINUS            shift, and go to state 7
+    NOT              shift, and go to state 8
+    '('              shift, and go to state 10
+
+    exp        go to state 72
+    condition  go to state 13
+    command    go to state 16
+
+
+State 69
+
+   27 compare: IF '(' exp ')' '{' exp '}' ELSE '{' exp '}' .
+
+    $default  reduce using rule 27 (compare)
+
+
+State 70
+
+    8 exp: REGISTER .
+   30 compare: IF '(' exp ')' '{' REGISTER INIT exp '}' ELSE '{' REGISTER . INIT exp '}'
+
+    INIT  shift, and go to state 73
+
+    $default  reduce using rule 8 (exp)
+
+
+State 71
+
+   10 exp: exp . PLUS exp
+   11    | exp . MINUS exp
+   12    | exp . MULT exp
+   13    | exp . DIV exp
+   14    | exp . MOD exp
+   15    | exp . OR exp
+   16    | exp . AND exp
+   22 condition: exp . COMPARE exp
+   23          | exp . '<' exp
+   24          | exp . '>' exp
+   29 compare: IF '(' exp ')' '{' REGISTER INIT exp '}' ELSE '{' exp . '}'
+
+    PLUS     shift, and go to state 27
+    MINUS    shift, and go to state 28
+    MULT     shift, and go to state 29
+    DIV      shift, and go to state 30
+    MOD      shift, and go to state 31
+    COMPARE  shift, and go to state 32
+    OR       shift, and go to state 33
+    AND      shift, and go to state 34
+    '<'      shift, and go to state 35
+    '>'      shift, and go to state 36
+    '}'      shift, and go to state 74
+
+
+State 72
+
+   10 exp: exp . PLUS exp
+   11    | exp . MINUS exp
+   12    | exp . MULT exp
+   13    | exp . DIV exp
+   14    | exp . MOD exp
+   15    | exp . OR exp
+   16    | exp . AND exp
+   22 condition: exp . COMPARE exp
+   23          | exp . '<' exp
+   24          | exp . '>' exp
+   28 compare: IF '(' exp ')' '{' exp '}' ELSE '{' REGISTER INIT exp . '}'
+
+    PLUS     shift, and go to state 27
+    MINUS    shift, and go to state 28
+    MULT     shift, and go to state 29
+    DIV      shift, and go to state 30
+    MOD      shift, and go to state 31
+    COMPARE  shift, and go to state 32
+    OR       shift, and go to state 33
+    AND      shift, and go to state 34
+    '<'      shift, and go to state 35
+    '>'      shift, and go to state 36
+    '}'      shift, and go to state 75
+
+
+State 73
+
+   30 compare: IF '(' exp ')' '{' REGISTER INIT exp '}' ELSE '{' REGISTER INIT . exp '}'
+
+    INTEGER_LITERAL  shift, and go to state 1
+    REGISTER         shift, and go to state 21
+    SHOW_DEC         shift, and go to state 6
+    MINUS            shift, and go to state 7
+    NOT              shift, and go to state 8
+    '('              shift, and go to state 10
+
+    exp        go to state 76
+    condition  go to state 13
+    command    go to state 16
+
+
+State 74
+
+   29 compare: IF '(' exp ')' '{' REGISTER INIT exp '}' ELSE '{' exp '}' .
+
+    $default  reduce using rule 29 (compare)
+
+
+State 75
+
+   28 compare: IF '(' exp ')' '{' exp '}' ELSE '{' REGISTER INIT exp '}' .
+
+    $default  reduce using rule 28 (compare)
+
+
+State 76
+
+   10 exp: exp . PLUS exp
+   11    | exp . MINUS exp
+   12    | exp . MULT exp
+   13    | exp . DIV exp
+   14    | exp . MOD exp
+   15    | exp . OR exp
+   16    | exp . AND exp
+   22 condition: exp . COMPARE exp
+   23          | exp . '<' exp
+   24          | exp . '>' exp
+   30 compare: IF '(' exp ')' '{' REGISTER INIT exp '}' ELSE '{' REGISTER INIT exp . '}'
+
+    PLUS     shift, and go to state 27
+    MINUS    shift, and go to state 28
+    MULT     shift, and go to state 29
+    DIV      shift, and go to state 30
+    MOD      shift, and go to state 31
+    COMPARE  shift, and go to state 32
+    OR       shift, and go to state 33
+    AND      shift, and go to state 34
+    '<'      shift, and go to state 35
+    '>'      shift, and go to state 36
+    '}'      shift, and go to state 77
+
+
+State 77
+
+   30 compare: IF '(' exp ')' '{' REGISTER INIT exp '}' ELSE '{' REGISTER INIT exp '}' .
+
+    $default  reduce using rule 30 (compare)
