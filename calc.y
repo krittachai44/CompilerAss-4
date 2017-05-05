@@ -280,9 +280,9 @@ void SHOWSTRING(string* str)
 		}
 		else{
 			if(notNum){
-				temp = (char *)malloc(strlen("%c")); // malloc for any character
+				temp = (char *)malloc(strlen("%%d")); // malloc for any character
 				//header
-				sprintf(temp,"%c",a[i]);
+				sprintf(temp,"%%d");
 				header = cat(header,temp);
 			}
 			else{
