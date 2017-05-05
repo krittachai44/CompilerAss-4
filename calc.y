@@ -220,6 +220,15 @@ void SHOWSTRING(string* str)
 {
 	char a[100];
 	strcpy(a,(*str).c_str());
+	int len = strlen(str);
+	for (i = 7; i < len; i++)
+    {
+        if (!isdigit(a[i])) {
+			notNum = 1;
+			break;
+		}
+    }
+	printf("\t\t%d\n",notNum);
 	a[(*str).length()+1] = '^';
 	int i;
 
@@ -269,6 +278,7 @@ void SHOWSTRING(string* str)
 			i+=4;
 		}
 		else{
+
 			temp = (char *)malloc(strlen("%c")); // malloc for any character
 			//header
 			sprintf(temp,"%c",a[i]);
