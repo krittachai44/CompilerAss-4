@@ -118,8 +118,8 @@ exp:		REGISTER 	{ addtoReg($1); $$ = regToInt($1);}
 				idivl	-4(%rbp)
 				movl	%eax, -8(%rbp)
 				*/
-				char* temp = (char *)malloc(strlen("	movl	r0, %%eax\ncltd\n\tidivl	r1\n\tmovl\t%%eax, r0\n"));
-				sprintf(temp,"	movl	r0, %%eax\ncltd\n\tidivl	r1\n\tmovl\t%%eax, r0\n");
+				char* temp = (char *)malloc(strlen("	movl	r0, %%eax\n\tcltd\n\tidivl	r1\n\tmovl\t%%eax, r0\n"));
+				sprintf(temp,"	movl	r0, %%eax\n\tcltd\n\tidivl	r1\n\tmovl\t%%eax, r0\n");
 				inmain = cat(inmain,temp);
 				}
 | exp MOD exp	{ $$ = $1 % $3; cReg = 1; r[0] = $$;}
