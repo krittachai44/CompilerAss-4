@@ -157,8 +157,8 @@ void addtoReg(string* in){
 	strcpy(a,(*in).c_str());
 	r[cReg]=reg[a[4]-'A'];
 
-	char* temp = (char *)malloc(strlen("	movl	$%d, r%d\n"));
-	sprintf(temp,"	movl	$%d, r%d\n",r[cReg],cReg);
+	char* temp = (char *)malloc(strlen("	movl	%d(%%rbp), r%d\n"));
+	sprintf(temp,"	movl	%d(%%rbp), r%d\n",((a[4]-'A')*8)+200,cReg);
 	inmain = cat(inmain,temp);
 	cReg++;
 }
