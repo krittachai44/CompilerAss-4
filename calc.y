@@ -228,13 +228,6 @@ void SHOWSTRING(string* str)
 	strcpy(a,(*str).c_str());
 	a[(*str).length()+1] = '^';
 
-	int notReg = 1;
-	for(i = 7;i < (*str).length()+1;i++){
-		if( a[i]=='#'&&a[i+1]=='r'&&a[i+2]=='e'&&a[i+3]=='g'&&a[i+4]>='A'&&a[i+4]<='Z'){
-				notReg = 0;
-		}
-	}
-
 	/*
 	header	.LCCountString:
 	.string	"xxx"
@@ -269,7 +262,7 @@ void SHOWSTRING(string* str)
 	movl	$0, %eax
 	call	printf*/
 
-	i = 7;
+	int i = 7;
 	while(a[i] != '^')
 	{
 		if(a[i]=='N'&&a[i+1]=='E'&&a[i+2]=='W'&&a[i+3]=='L'&&a[i+4]=='I'&&a[i+5]=='N'&&a[i+6]=='E'){
