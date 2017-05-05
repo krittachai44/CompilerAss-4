@@ -75,7 +75,7 @@
 %%
 
 input:		/* empty */
-| exp	{ cout << "= " << $1 << endl; cReg = 0;  }
+| exp	{ cout << "= " << $1 << endl; cReg = 0; printf("%s\n",inmain); }
 | compare
 | loop
 | init
@@ -91,13 +91,15 @@ exp:		REGISTER 	{ addtoReg($1); printf("%s\n",inmain); $$ = regToInt($1);}
 				sprintf(temp,"addl	r1, r0\n");
 				inmain = cat(inmain,temp);
 
-				cReg = 1; r[0] = $$;}
+				cReg = 1; r[0] = $$;
+				}
 | exp MINUS exp	{ $$ = $1 - $3;
 				char* temp = (char *)malloc(strlen("subl	r1, r0\n"));
 				sprintf(temp,"subl	r1, r0\n");
 				inmain = cat(inmain,temp);
 
-				cReg = 1; r[0] = $$;}
+				cReg = 1; r[0] = $$;
+				}
 | exp MULT exp	{ $$ = $1 * $3;
 				// char* temp = (char *)malloc(strlen("addl	r1, r0\n"));
 				// sprintf(temp,"addl	r1, r0\n");
