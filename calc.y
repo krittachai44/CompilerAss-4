@@ -75,7 +75,7 @@
 %%
 
 input:		/* empty */
-| exp	{ cout << "= " << $1 << endl;  }
+| exp	{ cout << "= " << $1 << endl; cReg = 0;  }
 | compare
 | loop
 | init
@@ -86,9 +86,24 @@ input:		/* empty */
 exp:		REGISTER 	{ addtoReg($1); printf("%s\n",inmain); $$ = regToInt($1);}
 // movl	-8(%rbp), %eax
 |INTEGER_LITERAL{ addtoReg($1); printf("%s\n",inmain); $$ = $1; }
-| exp PLUS exp	{ $$ = $1 + $3; cReg = 1; r[0] = $$;}
-| exp MINUS exp	{ $$ = $1 - $3; cReg = 1; r[0] = $$;}
-| exp MULT exp	{ $$ = $1 * $3; cReg = 1; r[0] = $$;}
+| exp PLUS exp	{ $$ = $1 + $3;
+				char* temp = (char *)malloc(strlen("addl	r1, r0\n"));
+				sprintf(temp,"addl	r1, r0\n");
+				inmain = cat(inmain,temp);
+
+				cReg = 1; r[0] = $$;}
+| exp MINUS exp	{ $$ = $1 - $3;
+				char* temp = (char *)malloc(strlen("subl	r1, r0\n"));
+				sprintf(temp,"subl	r1, r0\n");
+				inmain = cat(inmain,temp);
+
+				cReg = 1; r[0] = $$;}
+| exp MULT exp	{ $$ = $1 * $3;
+				// char* temp = (char *)malloc(strlen("addl	r1, r0\n"));
+				// sprintf(temp,"addl	r1, r0\n");
+				// inmain = cat(inmain,temp);
+
+				cReg = 1; r[0] = $$;}
 | exp DIV exp	{ $$ = $1 / $3; cReg = 1; r[0] = $$;}
 | exp MOD exp	{ $$ = $1 % $3; cReg = 1; r[0] = $$;}
 | MINUS exp  %prec NEG { $$ = -$2;}
