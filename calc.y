@@ -230,18 +230,7 @@ void SHOWSTRING(string* str)
 			break;
 		}
     }
-	printf("\t\t%d\n",notNum);
-	a[(*str).length()+1] = '^';
 
-
-	for (i = 7; i < len; i++)
-    {
-        if (!isdigit(a[i])) {
-			notNum = 1;
-			break;
-		}
-    }
-	printf("\t\t%d\n",notNum);
 	a[(*str).length()+1] = '^';
 
 	/*
