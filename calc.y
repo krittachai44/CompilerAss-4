@@ -138,10 +138,10 @@ command:	SHOW_DEC exp 	{ $$=$2; }
 ;
 
 init:		REGISTER INIT exp 	{ 	loadToReg($3,$1);
-									char* temp = (char *)malloc(strlen("	movl	r1, %d(%%rbp)\n"));
+									char* temp = (char *)malloc(strlen("	movl	r1, %d(%%rbp)\n\n"));
 									char a[100];
 									strcpy(a,(*$1).c_str());
-									sprintf(temp,"	movl	r0, %d(%%rbp)\n",((a[4]-'A')*8)+200);
+									sprintf(temp,"	movl	r0, %d(%%rbp)\n\n",((a[4]-'A')*8)+200);
 									inmain = cat(inmain,temp);
 
 									cReg = 0; r[0] = $$;
