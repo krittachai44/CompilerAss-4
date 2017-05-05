@@ -290,11 +290,17 @@ void SHOWSTRING(string* str)
 			i+=4;
 		}
 		else{
-
-			temp = (char *)malloc(strlen("%c")); // malloc for any character
-			//header
-			sprintf(temp,"%c",a[i]);
-			header = cat(header,temp);
+			if(notNum){
+				temp = (char *)malloc(strlen("%c")); // malloc for any character
+				//header
+				sprintf(temp,"%c",a[i]);
+				header = cat(header,temp);
+			}
+			else{
+				temp = (char *)malloc(2);
+				sprintf(temp,"%%d");
+				header = cat(header,temp);
+			}
 		}
 		i++;
 	}
