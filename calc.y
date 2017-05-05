@@ -82,7 +82,7 @@ input:		/* empty */
 | STRING { SHOWSTRING($1);
 	/*movl	$.LC0, %edi
 		movl	$0, %eax
-		call	printf*/ printf("%s\n",header); printf("%s\n",inmain ); }
+		call	printf*/ printf("%s\n",header); printf("%s\n",inmain ); printf("%s\n",inmain );}
 | EXIT {return 4;}
 ;
 //char* temp = (char *)malloc(strlen("\taddl\t$%d,\t%d(%%rbp)"),$1,$2);
