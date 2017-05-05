@@ -229,6 +229,9 @@ void funtionLOOP(int con,int stat1)
 	movl	$0, -4(%rbp)
 	jmp	.L2
 .L3:
+	xxxx
+	xxxx
+	xxxx
 	addl	$1, -4(%rbp)
 .L2:
 	cmpl	$4, -4(%rbp)
@@ -236,8 +239,8 @@ void funtionLOOP(int con,int stat1)
 
 	*/
 
-	char* temp = (char *)malloc(strlen("\tmovl\t$0, r%%d\n\tjmp .L2\n.L3:\n\taddl\t$1, r%%d\n.L2:\n\tcmpl\t$%d, r%d\n\tjle .L3"));
-	sprintf(temp,"\tmovl\t$0, r%%d\n\tjmp .L2\n.L3:\n\taddl\t$1, r%%d\n.L2:\n\tcmpl\t$%d, r%d\n\tjle .L3\n",cReg,cReg,con-1,cReg);
+	char* temp = (char *)malloc(strlen("\tmovl\t$0, r%d\n\tjmp .L2\n.L3:\n\taddl\t$1, r%d\n.L2:\n\tcmpl\t$%d, r%d\n\tjle .L3"));
+	sprintf(temp,"\tmovl\t$0, r%d\n\tjmp .L2\n.L3:\n\taddl\t$1, r%d\n.L2:\n\tcmpl\t$%d, r%d\n\tjle .L3\n",cReg,cReg,con-1,cReg);
 	cat(inmain,temp);
 	printf("%s\n",inmain );
 	int i=0;
