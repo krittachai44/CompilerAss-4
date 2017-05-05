@@ -227,7 +227,7 @@ void funtionLOOP(int con,int stat1)
 	*/
 
 	//char *temp = (char *)malloc(strlen("/tmov/t"));
-	char* temp = (char *)malloc("	movl	$0, r%%d");
+	char* temp = (char *)malloc(strlen("	movl	$0, r%%d"));
 	int i=0;
 	for(;i<con;i++)
 	{
