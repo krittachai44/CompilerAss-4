@@ -77,7 +77,7 @@
 input:		/* empty */
 | exp	{ cout << "= " << $1 << endl; cReg = 0; printf("%s\n",inmain); }
 | compare
-| loop
+| loop	{printf("%s\n",inmain);}
 | init	{printf("%s\n",inmain);}
 | STRING { SHOWSTRING($1);
 	/*movl	$.LC0, %edi
