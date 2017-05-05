@@ -83,9 +83,9 @@ input:		/* empty */
 | EXIT {return 4;}
 ;
 //char* temp = (char *)malloc(strlen("\taddl\t$%d,\t%d(%%rbp)"),$1,$2);
-exp:		REGISTER 	{ addtoReg($1); printf("%s\n",inmain); $$ = regToInt($1);}
+exp:		REGISTER 	{ addtoReg($1); $$ = regToInt($1);}
 // movl	-8(%rbp), %eax
-|INTEGER_LITERAL{ addtoReg($1); printf("%s\n",inmain); $$ = $1; }
+|INTEGER_LITERAL{ addtoReg($1); $$ = $1; }
 | exp PLUS exp	{ $$ = $1 + $3;
 				char* temp = (char *)malloc(strlen("	addl	r1, r0\n"));
 				sprintf(temp,"	addl	r1, r0\n");
