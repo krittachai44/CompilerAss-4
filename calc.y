@@ -284,7 +284,7 @@ void SHOWSTRING(string* str)
 			i+=4;
 		}
 		else{
-			temp = (char *)malloc(strlen(1));
+			temp = (char *)malloc(1);
 			sprintf(temp,"%c",a[i]);
 			header = cat(header,temp);
 		}
