@@ -37,7 +37,7 @@ char *inmain="";
 	string*	op_val;
 }
 
-%start	input 
+%start	input
 
 %token	<int_val>	INTEGER_LITERAL
 %token	<op_val>	REGISTER
@@ -53,7 +53,7 @@ char *inmain="";
 
 
 %token	IF ELSE
-%token	FORWARD 
+%token	FORWARD
 %token  INIT SHOW_DEC
 
 %left	PLUS MINUS
@@ -69,31 +69,25 @@ char *inmain="";
 
 %%
 
-input:		/* empty */		
+input:		/* empty */
 | exp	{ cout << "= " << $1 << endl;  }
 | compare
 | loop
 | init
-| STRING { SHOWSTRING($1); }			
+| STRING { SHOWSTRING($1); }
 | EXIT {return 4;}
 ;
-//char* temp = (char *)malloc(strlen("\taddl\t$%d,\t%d(%%rbp)"),$1,$2); 
+//char* temp = (char *)malloc(strlen("\taddl\t$%d,\t%d(%%rbp)"),$1,$2);
 exp:		REGISTER 	{$$ = regToInt($1);}
 	// movl	-8(%rbp), %eax
 |INTEGER_LITERAL{ $$ = $1; }
-| exp PLUS exp	{ if($1 > 0){
-		printf("asd");
-	}
-	else if($2 < 5){
-		printf("sdf");
-	}
-	$$ = $1 + $3; }
+| exp PLUS exp	{ $$ = $1 + $3; }
 	/*
 	how to know exp is register or just value?????????
 	regis + regis
-	
+
 	char* temp = (char *)malloc(strlen("\tmovl\t%d(%%rbp), %%eax\n
-														\taddl\t%%eax, %d(%%rbp)"); 
+														\taddl\t%%eax, %d(%%rbp)");
 					sprintf(temp,"\tmovl\t%d(%%rbp), %%eax\n
 								  \taddl\t%%eax, %d(%%rbp)",);
 
@@ -107,7 +101,7 @@ exp:		REGISTER 	{$$ = regToInt($1);}
 	*/
 	/*
 	val + regis same regis + val
-	
+
 	movl	-4(%rbp), %eax
 	addl	$5, %eax
 	movl	%eax, -4(%rbp)
@@ -120,7 +114,7 @@ exp:		REGISTER 	{$$ = regToInt($1);}
 	subl	%eax, -8(%rbp)
 
 	movl	$-1, -8(%rbp)
-	
+
 	movl	-8(%rbp), %eax
 	subl	$2, %eax
 	movl	%eax, -4(%rbp)
@@ -145,15 +139,15 @@ condition:	exp COMPARE exp		{ $$ = $1== $3?1:0;}
 compare:	IF '(' exp ')' '{' exp '}'  					{funtionIF($3,$6);}
 | IF '(' exp ')' '{' REGISTER INIT exp '}'  			{if($3){loadToReg($8,$6);}}
 | IF '(' exp ')' '{' exp '}' ELSE '{' exp '}'			{funtionIFELSE($3,$6,$10);}
-| IF '(' exp ')' '{' exp '}' ELSE '{' REGISTER INIT exp '}'			
+| IF '(' exp ')' '{' exp '}' ELSE '{' REGISTER INIT exp '}'
 { if($3) printf("%d\n",$6); else loadToReg($12,$10); }
-| IF '(' exp ')' '{' REGISTER INIT exp '}' ELSE '{' exp '}'			
+| IF '(' exp ')' '{' REGISTER INIT exp '}' ELSE '{' exp '}'
 { if($3) loadToReg($8,$6); else printf("%d\n",$12); }
 | IF '(' exp ')' '{' REGISTER INIT exp '}' ELSE '{' REGISTER INIT exp '}'	{if($3){loadToReg($8,$6);}else{loadToReg($14,$12);}}
 ;
 
 loop:		FORWARD '(' exp ',' exp ')' 			{funtionLOOP($3,$5);}
-		//| FORWARD'('exp ',' FORWARD'('exp','exp')'')'	
+		//| FORWARD'('exp ',' FORWARD'('exp','exp')'')'
 ;
 
 command:	SHOW_DEC exp 				{$$=$2;}
@@ -185,9 +179,9 @@ void funtionLOOP(int con,int stat1)
 .L2:
 	cmpl	$4, -8(%rbp)
 	jle	.L3
-*/	
+*/
 	//char *temp = (char *)malloc(strlen("/tmov/t"));
-	
+
 	int i=0;
 	for(;i<con;i++)
 	{
@@ -237,7 +231,7 @@ header	.LCCountString:
 	movl	$0, %eax
 	call	printf*/
 
-	i = 7;	
+	i = 7;
 	while(a[i] != '^')
 	{
 		if(a[i]=='N'&&a[i+1]=='E'&&a[i+2]=='W'&&a[i+3]=='L'&&a[i+4]=='I'&&a[i+5]=='N'&&a[i+6]=='E'){
@@ -270,7 +264,7 @@ header	.LCCountString:
 	temp = (char *)malloc(strlen("\"\n"));
 	sprintf(temp,"\"\n");
 	header = cat(header,temp);
-	
+
 	printf("%s",header);
 	printf("%s",inmain);
 /*
@@ -280,7 +274,7 @@ main	movl	$.LC0, %edi
 */
 
 	countString++;
-/*	
+/*
 	/*i=7;
 	while(a[i] != '^')
 	{
@@ -289,9 +283,9 @@ main	movl	$.LC0, %edi
 				printf("\n");
 				i+=6;
 			}
-		else if( a[i]=='#'&&a[i+1]=='r'&&a[i+2]=='e'&&a[i+3]=='g'&&a[i+4]>='A'&&a[i+4]<='Z') 
+		else if( a[i]=='#'&&a[i+1]=='r'&&a[i+2]=='e'&&a[i+3]=='g'&&a[i+4]>='A'&&a[i+4]<='Z')
 			{ printf("%d",reg[a[i+4]-'A']); i+=4; }
-		else 
+		else
 			printf("%c",a[i]);
 		i++;
 	}
@@ -301,7 +295,7 @@ main	movl	$.LC0, %edi
 
 
 int yyerror(string s)
-{	
+{
 	extern char *yytext;
 	printf("\r! ERROR : SYNTAX ERROR\n");
 
@@ -316,7 +310,7 @@ int yyerror(char *s)
 int xtoi(char *hexstring)
 {
 	int	i = 0;
-	
+
 	while (*hexstring)
 	{
 		char c = toupper(*hexstring++);
@@ -350,7 +344,7 @@ int regToInt(string* regname)
 }
 
 void loadToReg(int vval, string* regname)
-{	
+{
 	char cregname[10];
 	strcpy(cregname, (*regname).c_str());
 	int regVal;
@@ -371,8 +365,8 @@ void loadToReg(int vval, string* regname)
 	isReg = 0;
 	inregTo = 0;
 	printf("%s",inmain);
-	
+
 //	printf("\tmovl\t$%d, %d(%rbp)\n",vval,(regVal*7)+100);
-	reg[cregname[4]-'A'] = vval;		
-	
+	reg[cregname[4]-'A'] = vval;
+
 }
