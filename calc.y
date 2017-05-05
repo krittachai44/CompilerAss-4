@@ -220,8 +220,8 @@ void SHOWSTRING(string* str)
 {
 	char a[100];
 	strcpy(a,(*str).c_str());
-
-  int len = strlen((*str).c_str());
+	int notNum = 0;
+	int len = strlen((*str).c_str());
 	for (i = 7; i < len; i++)
     {
         if (!isdigit(a[i])) {
