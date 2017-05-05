@@ -88,14 +88,14 @@ exp:		REGISTER 	{ addtoReg($1); $$ = regToInt($1);}
 |INTEGER_LITERAL{ addtoReg($1); $$ = $1; }
 | exp PLUS exp	{ $$ = $1 + $3;
 				char* temp = (char *)malloc(strlen("	addl	r1, r0\n"));
-				sprintf(temp,"	addl	r1, r0\n");
+				sprintf(temp,"	addl	r1, r0\n\n");
 				inmain = cat(inmain,temp);
 
 				cReg = 1; r[0] = $$;
 				}
 | exp MINUS exp	{ $$ = $1 - $3;
 				char* temp = (char *)malloc(strlen("	subl	r1, r0\n"));
-				sprintf(temp,"	subl	r1, r0\n");
+				sprintf(temp,"	subl	r1, r0\n\n");
 				inmain = cat(inmain,temp);
 
 				cReg = 1; r[0] = $$;
@@ -137,7 +137,13 @@ loop:		FORWARD '(' exp ',' exp ')' 			{funtionLOOP($3,$5);}
 command:	SHOW_DEC exp 	{ $$=$2; }
 ;
 
-init:		REGISTER INIT exp 	{ loadToReg($3,$1); }
+init:		REGISTER INIT exp 	{ 	loadToReg($3,$1);
+									char* temp = (char *)malloc(strlen("	movl	r1, %d(%%rbp)\n"));
+									sprintf(temp,"	movl	r1, %d(%%rbp)\n",($1[4]-'A'*8)+200);
+									inmain = cat(inmain,temp);
+
+									cReg = 1; r[0] = $$;
+								}
 ;
 
 %%
