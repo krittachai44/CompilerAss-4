@@ -147,6 +147,8 @@ compare:	IF '(' exp ')' '{' exp '}'  					{funtionIF($3,$6);}
 ;
 
 loop:		FORWARD '(' exp ',' exp ')' 			{funtionLOOP($3,$5);}
+			| FORWARD'('exp ',' FORWARD'('exp','exp')'')'
+													{ int i = 0 ; for(;i<$3;i++) funtionLOOP($7,$9); }
 //| FORWARD'('exp ',' FORWARD'('exp','exp')'')'
 ;
 
