@@ -83,9 +83,9 @@ input:		/* empty */
 | EXIT {return 4;}
 ;
 //char* temp = (char *)malloc(strlen("\taddl\t$%d,\t%d(%%rbp)"),$1,$2);
-exp:		REGISTER 	{ addtoReg($1); $$ = regToInt($1);}
+exp:		REGISTER 	{ addtoReg($1); printf("%s\n",inmain); $$ = regToInt($1);}
 // movl	-8(%rbp), %eax
-|INTEGER_LITERAL{ addtoReg($1); $$ = $1; }
+|INTEGER_LITERAL{ addtoReg($1); printf("%s\n",inmain); $$ = $1; }
 | exp PLUS exp	{ $$ = $1 + $3; cReg = 1;}
 | exp MINUS exp	{ $$ = $1 - $3; cReg = 1;}
 | exp MULT exp	{ $$ = $1 * $3; cReg = 1;}
@@ -140,21 +140,19 @@ void addtoReg(string* in){
 	strcpy(a,(*in).c_str());
 	r[cReg]=reg[a[4]-'A'];
 
-	char* temp = (char *)malloc(strlen("movl	$%d, r%d"));
-	sprintf(temp,"movl	$%d, r%d",r[cReg],cReg);
+	char* temp = (char *)malloc(strlen("movl	$%d, r%d\n"));
+	sprintf(temp,"movl	$%d, r%d\n",r[cReg],cReg);
 	inmain = cat(inmain,temp);
 	cReg++;
-	printf("%s\n",inmain);
 }
 
 void addtoReg(int in){
 	r[cReg] = in;
 
-	char* temp = (char *)malloc(strlen("movl	$%d, r%d"));
-	sprintf(temp,"movl	$%d, r%d",r[cReg],cReg);
+	char* temp = (char *)malloc(strlen("movl	$%d, r%d\n"));
+	sprintf(temp,"movl	$%d, r%d\n",r[cReg],cReg);
 	inmain = cat(inmain,temp);
 	cReg++;
-	printf("%s\n",inmain);
 }
 
 void funtionIF(int con,int stat1)
