@@ -160,7 +160,7 @@ condition:	exp COMPARE exp		{
 						// 		cmpl	$1, -8(%rbp)
 						// 		jne		.L2
 								temp = (char *)malloc(strlen("\tcmpl\tr%d, r%d\n\tjne\t.L%d\n"));
-								sprintf(temp,"\tcmpl\tr%d, r%d\n\tjne\t.L%d\n",cReg-2,cReg-1,2+cLX);
+								sprintf(temp,"\tcmpl\tr%d, r%d\n\tjne\t.L%d\n",cReg,cReg-1,2+cLX);
 								inmain = cat(inmain,temp);
 
 								$$=$1==$3?1:0;}
