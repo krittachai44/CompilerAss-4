@@ -267,6 +267,7 @@ void funtionLOOP(int con,int stat1)
 	inmain = cat(inmain,temp);
 	cReg++;
 	countString++;
+	cLoop++;
 }
 
 void SHOWSTRING(string* str)
