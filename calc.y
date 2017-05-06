@@ -211,7 +211,7 @@ compare:	IF '(' condition ')' '{' exp '}'  		{ funtionIF($3,$6);}
 
 	//INIT IN ELSE
 			temp = (char *)malloc(strlen("	movl	%d,r1\n\n"));
-			sprintf(temp,"	movl	%d,r1\n\n",$13);
+			sprintf(temp,"	movl	%d,r1\n",$13);
 			inmain = cat(inmain,temp);
 
 		showDec();
