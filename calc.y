@@ -19,8 +19,8 @@
 	void addtoReg(string* in);
 	void addtoReg(int in);
 
-	void showDec(string* in);
-	void showDec(int in);
+	/*void showDec(string* in);
+	void showDec(int in);*/
 
 	char* cat(char* old,char* nw); // concast string
 
@@ -176,7 +176,7 @@ loop:		FORWARD '(' exp ',' exp ')' 			{ funtionLOOP($3,$5); cReg = 0;}
 													{ int i = 0 ; for(;i<$3;i++) funtionLOOP($7,$9); }
 ;
 
-command:	SHOW_DEC exp 	{ showDec($2); $$=$2; }
+command:	SHOW_DEC exp 	{ /*showDec($2);*/ $$=$2; printf("%s\n",inmain);}
 ;
 
 init:		REGISTER INIT exp 	{ 	loadToReg($3,$1);
