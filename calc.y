@@ -335,7 +335,7 @@ void initINloop(int count,string* regin,char oop,int val){
 	sprintf(temp,"\tmovl\t$0, r%d\n\tjmp\t.L%d\n.L%d\n",cReg,2+cLX,3+cLX);
 	cReg+=1;
 	inmain = cat(inmain,temp);
-	char a[6];
+	char a[100];
 
 	strcpy(a,(*regin).c_str());
 
