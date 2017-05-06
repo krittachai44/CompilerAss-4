@@ -82,7 +82,7 @@
 
 input:		/* empty */
 | exp	{ cout << "= " << $1 << endl; cReg = 0;printf("%s\n",header); printf("%s\n",inmain); }
-| compare
+| compare {printf("%s\n",inmain);}
 | loop	{printf("%s\n",header); printf("%s\n",inmain);}
 | init	{printf("%s\n",inmain);}
 | STRING { SHOWSTRING($1);
@@ -162,11 +162,11 @@ condition:	exp COMPARE exp		{
 								temp = (char *)malloc(strlen("\tcmpl\t$%d, r%d\n\tjne\t.L%d\n"));
 								sprintf(temp,"\tcmpl\t$%d, r%d\n\tjne\t.L%d\n",$1,cReg-1,2+cLX);
 								inmain = cat(inmain,temp);
-								printf("%s\n", inmain);
+							
 								$$=$1==$3?1:0;}
 ;
 
-compare:	IF '(' condition ')' '{' exp '}'  				{ funtionIF($3,$6); }
+compare:	IF '(' condition ')' '{' exp '}'  				{ funtionIF($3,$6);}
 | IF '(' condition ')' '{' REGISTER INIT exp '}'  			{ if($3){loadToReg($8,$6);} }
 | IF '(' condition ')' '{' exp '}' ELSE '{' exp '}'			{ funtionIFELSE($3,$6,$10); }
 | IF '(' condition ')' '{' exp '}' ELSE '{' REGISTER INIT exp '}'
