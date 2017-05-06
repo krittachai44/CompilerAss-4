@@ -152,15 +152,15 @@ exp:		REGISTER	{ addtoReg($1); $$ = regToInt($1); }
 							cReg = 1; r[0] = $$;
 						}
 | '(' exp ')'        { $$ = $2;}
-| condition
+| condition			{ cReg= 0; }
 | command
 ;
 
 condition:	exp COMPARE exp		{
 						// 		cmpl	$1, -8(%rbp)
 						// 		jne		.L2
-								temp = (char *)malloc(strlen("\tcmpl\t$%d, r%d\n\tjne\t.L%d\n"));
-								sprintf(temp,"\tcmpl\t$%d, r%d\n\tjne\t.L%d\n",$1,cReg-1,2+cLX);
+								temp = (char *)malloc(strlen("\tcmpl\tr%d, r%d\n\tjne\t.L%d\n"));
+								sprintf(temp,"\tcmpl\tr%d, r%d\n\tjne\t.L%d\n",cReg-2,cReg-1,2+cLX);
 								inmain = cat(inmain,temp);
 
 								$$=$1==$3?1:0;}
