@@ -126,6 +126,7 @@ exp:		REGISTER 	{ addtoReg($1); $$ = regToInt($1);}
 				temp = (char *)malloc(strlen("	movl	r0, %%eax\n\tcltd\n\tidivl	r1\n\tmovl\t%%eax, r0\n"));
 				sprintf(temp,"	movl	r0, %%eax\n\tcltd\n\tidivl	r1\n\tmovl\t%%eax, r0\n\n");
 				inmain = cat(inmain,temp);
+				cReg = 0; r[0] = $$;
 				}
 | exp MOD exp	{ $$ = $1 % $3; cReg = 1; r[0] = $$;
 				// 	movl	-8(%rbp), %eax
@@ -135,6 +136,7 @@ exp:		REGISTER 	{ addtoReg($1); $$ = regToInt($1);}
 				temp = (char *)malloc(strlen("	movl	r0, %%eax\n\tcltd\n\tidivl	r1\n\tmovl\t%%eax, r0\n"));
 				sprintf(temp,"	movl	r0, %%eax\n\tcltd\n\tidivl	r1\n\tmovl\t%%eax, r0\n\n");
 				inmain = cat(inmain,temp);
+				cReg = 0; r[0] = $$;
 				}
 | MINUS exp  %prec NEG { 	$$ = -$2;
 							cReg--;
@@ -143,7 +145,8 @@ exp:		REGISTER 	{ addtoReg($1); $$ = regToInt($1);}
 							temp = (char *)malloc(strlen("	subl	$%d, r%d\n"));
 							sprintf(temp,"	subl	$%d, r%d\n",tempR,cReg);
 							inmain = cat(inmain,temp);
-							cReg++;
+
+							cReg = 0; r[0] = $$;
 						}
 | '(' exp ')'        { $$ = $2;}
 | condition
@@ -174,10 +177,10 @@ command:	SHOW_DEC exp 	{ $$=$2; }
 ;
 
 init:		REGISTER INIT exp 	{ 	loadToReg($3,$1);
-									temp = (char *)malloc(strlen("	movl	r%d, %d(%%rbp)\n\n"));
+									temp = (char *)malloc(strlen("	movl	r0, %d(%%rbp)\n\n"));
 									char a[100];
 									strcpy(a,(*$1).c_str());
-									sprintf(temp,"	movl	r%d, %d(%%rbp)\n\n",cReg,((a[4]-'A')*8)+200);
+									sprintf(temp,"	movl	r0, %d(%%rbp)\n\n",((a[4]-'A')*8)+200);
 									inmain = cat(inmain,temp);
 
 									cReg = 0; r[0] = $$;
