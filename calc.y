@@ -191,12 +191,10 @@ compare:	IF '(' condition ')' '{' exp '}'  		{ funtionIF($3,$6);}
 	}
 }
 | IF '(' condition ')' '{' REGISTER INIT exp '}' ELSE '{' SHOW_DEC exp '}'
-{ 	if($3){
-		loadToReg($8,$6);
-
-
+{
 
 		if($3){loadToReg($8,$6);}else{printf("%d",$13);}
+
 	 //INIT IN IF
 		 temp = (char *)malloc(strlen("	movl	r0, %d(%%rbp)\n\n"));
 		 char a[100];
@@ -219,15 +217,11 @@ compare:	IF '(' condition ')' '{' exp '}'  		{ funtionIF($3,$6);}
 
 
 		cLX += 1;
-	}
-	else funtionIF($3,$13);
+
+	//funtionIF($3,$13);
 }
 | IF '(' condition ')' '{' REGISTER INIT exp '}' ELSE '{' REGISTER INIT exp '}'
 {
-	temp = (char *)malloc(strlen("\tjne\t.L%d\n"));
-	sprintf(temp,"\tjne\t.L%d\n",2+cLX);
-	inmain = cat(inmain,temp);
-
 	if($3){loadToReg($8,$6);}else{loadToReg($14,$12);}
  //INIT IN IF
 	 temp = (char *)malloc(strlen("	movl	r0, %d(%%rbp)\n\n"));
