@@ -323,25 +323,36 @@ void initINloop(int count,string* regin,char oop,int val){
 	//	 	movl	$0, -4(%rbp)
 	// 		jmp	.L2
 	// .L3:
-	// 		movl	$.LC0, %edi
-	// 		movl	$0, %eax
-	// 		call	printf
-	// 		addl	$1, -4(%rbp)
+	// 		xxx
+	//		movl	%d(%rbp), r%d cReg+1
+	//		movl	%d, r%d		cReg+2
+	// 		addl	r*cReg+2, r*cReg+1
 	// .L2:
 	// 		cmpl	$4, -4(%rbp)
 	// 		jle	.L3
 	temp = (char *)malloc(strlen("\tmovl\t$0, r%d\n\tjmp\t.L%d\n.L%d\n"));
 	sprintf(temp,"\tmovl\t$0, r%d\n\tjmp\t.L%d\n.L%d",cReg,2+cLX,3+cLX);
+	cReg+=1;
 	char a[6];
 	strcpy(a,(*regin).c_str());
 	for(;count>0;count--)
 	{
 		if(oop == '+'){
-			temp = (char *)malloc(strlen("	addl	r1, r0\n"));
-			sprintf(temp,"	addl	r1, r0\n\n");
+			temp = (char *)malloc(strlen("	movl	%d(%%rbp), r%d\n"));
+			sprintf(temp,"	movl	%d(%%rbp), r%d\n",((a[4]-'A')*8)+200)
+			cReg+=1;
 			inmain = cat(inmain,temp);
 
+			temp = (char *)malloc(strlen("\tmovl	%d, r%d\n"));
+			printf(temp,"\tmovl	%d, r%d\n",val,cReg)
+			cReg+=1;
+			inmain = cat(inmain,temp);
+
+			temp = (char *)malloc(strlen("	addl	r%d, r%d\n"));
+			sprintf(temp,"	addl	r%d, r%d\n\n",cReg-1,cReg-2);
 			cReg = 1;
+			inmain = cat(inmain,temp);
+
 			reg[a[4]-'A'] = reg[a[4]-'A'] + val;
 		}
 		else if(oop == '-'){
@@ -376,10 +387,6 @@ void initINloop(int count,string* regin,char oop,int val){
 			cReg = 1;
 			reg[a[4]-'A'] = reg[a[4]-'A'] % val;
 		}
-		headerPercentD();
-		temp = (char *)malloc(strlen("\tmovl\tr%d, %%esi\n\tmovl\t$.LC%d, %%edi\n\tmovl\t$0, %%eax\n\tcall\tprintf\n\n"));
-		sprintf(temp,"\tmovl\tr%d, %%esi\n\tmovl\t$.LC%d, %%edi\n\tmovl\t$0, %%eax\n\tcall\tprintf\n\n",cReg-1,lcPercentD);
-		inmain = cat(inmain,temp);
 	}
 }
 
