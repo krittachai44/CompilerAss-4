@@ -186,7 +186,7 @@ compare:	IF '(' condition ')' '{' exp '}'  		{ funtionIF($3,$6);}
 		cLX += 1;
 	}
 }
-| IF '(' condition ')' '{' REGISTER INIT exp '}' ELSE '{' exp '}'
+| IF '(' condition ')' '{' REGISTER INIT exp '}' ELSE '{' SHOW_DEC exp '}'
 { 	if($3){
 		loadToReg($8,$6);
 		temp = (char *)malloc(strlen(".L%d\n"));
@@ -194,7 +194,7 @@ compare:	IF '(' condition ')' '{' exp '}'  		{ funtionIF($3,$6);}
 		inmain = cat(inmain,temp);
 		cLX += 1;
 	}
-	else funtionIF($3,$12);
+	else funtionIF($3,$13);
 }
 | IF '(' condition ')' '{' REGISTER INIT exp '}' ELSE '{' REGISTER INIT exp '}'
 {
