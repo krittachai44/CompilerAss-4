@@ -162,7 +162,7 @@ condition:	exp COMPARE exp		{
 								temp = (char *)malloc(strlen("\tcmpl\t$%d, r%d\n\tjne\t.L%d\n"));
 								sprintf(temp,"\tcmpl\t$%d, r%d\n\tjne\t.L%d\n",$1,cReg-1,2+cLX);
 								inmain = cat(inmain,temp);
-							
+
 								$$=$1==$3?1:0;}
 ;
 
@@ -287,6 +287,7 @@ void funtionIF(int con,int stat1)
 // .L2:
 	temp = (char *)malloc(strlen(".L%d\n"));
 	sprintf(temp,".L%d\n",cLX);
+	inmain = cat(inmain,temp);
 	cLX += 1;
 	if(con) printf("%d\n",stat1);
 }
