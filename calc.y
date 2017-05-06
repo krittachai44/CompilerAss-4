@@ -339,12 +339,12 @@ void initINloop(int count,string* regin,char oop,int val){
 	{
 		if(oop == '+'){
 			temp = (char *)malloc(strlen("	movl	%d(%%rbp), r%d\n"));
-			sprintf(temp,"	movl	%d(%%rbp), r%d\n",((a[4]-'A')*8)+200);
+			sprintf(temp,"	movl	%d(%%rbp), r%d\n",((a[4]-'A')*8)+200,cReg);
 			cReg+=1;
 			inmain = cat(inmain,temp);
 
 			temp = (char *)malloc(strlen("\tmovl	%d, r%d\n"));
-			printf(temp,"\tmovl	%d, r%d\n",val,cReg);
+			sprintf(temp,"\tmovl	%d, r%d\n",val,cReg);
 			cReg+=1;
 			inmain = cat(inmain,temp);
 
