@@ -38,6 +38,7 @@
 	char *header="";
 	char *inmain="";
 	char *temp="";
+	char *allc="";
 
 	int r[13]={0};//r0-r12
 	int cReg = 0;
