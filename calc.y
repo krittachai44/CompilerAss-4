@@ -206,7 +206,7 @@ compare:	IF '(' condition ')' '{' exp '}'  		{ funtionIF($3,$6);}
  //INIT IN IF
 	 temp = (char *)malloc(strlen("	movl	r0, %d(%%rbp)\n\n"));
 	 char a[100];
-	 strcpy(a,(*$1).c_str());
+	 strcpy(a,(*$6).c_str());
 	 sprintf(temp,"	movl	r0, %d(%%rbp)\n\n",((a[4]-'A')*8)+200);
 	 inmain = cat(inmain,temp);
 
