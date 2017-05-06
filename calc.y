@@ -283,7 +283,7 @@ void funtionLOOP(int con,int stat1)
 		printf("%d\n",stat1);
 	}*/
 	temp = (char *)malloc(strlen("\n\taddl\t$1, r%d\n.L2:\n\tcmpl\t$%d, r%d\n\tjle .L3\n\n"));
-	sprintf(temp,"\n\taddl\t$1, r%d\n.L%d:\n\tcmpl\t$%d, r%d\n\tjle .L%d\n\n",cReg,2+cLoop,con-1,cReg,3+cLoop);
+	sprintf(temp,"\n\taddl\t$1, r%d\n.L%d:\n\tcmpl\t$%d, r%d\n\tjle .L%d\n\n",cReg,2+cLoop,con-2,cReg,3+cLoop);
 	inmain = cat(inmain,temp);
 	cReg++;
 	countString++;
