@@ -399,7 +399,10 @@ void initINloop(int count,string* regin,char oop,int val){
 
 		cReg = 1;
 	}
-
+	temp = (char *)malloc(strlen("\tmovl	r%d, %d(%%rbp)\n"));
+	sprintf(temp,"\tmovl	r%d, %d(%%rbp)\n",cReg,((a[4]-'A')*8)+200);
+	inmain = cat(inmain,temp);
+	
 	temp = (char *)malloc(strlen("\taddl\t$1, r%d\n"));
 	sprintf(temp,"\taddl\t$1, r%d\n",cReg);
 	inmain = cat(inmain,temp);
