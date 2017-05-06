@@ -166,14 +166,44 @@ condition:	exp COMPARE exp		{
 								$$=$1==$3?1:0;}
 ;
 
-compare:	IF '(' condition ')' '{' exp '}'  				{ funtionIF($3,$6);}
-| IF '(' condition ')' '{' REGISTER INIT exp '}'  			{ if($3){loadToReg($8,$6);} }
-| IF '(' condition ')' '{' exp '}' ELSE '{' exp '}'			{ funtionIFELSE($3,$6,$10); }
+compare:	IF '(' condition ')' '{' exp '}'  		{ funtionIF($3,$6);}
+| IF '(' condition ')' '{' REGISTER INIT exp '}'  	{ 	if($3){loadToReg($8,$6);}
+
+														temp = (char *)malloc(strlen(".L%d\n"));
+														sprintf(temp,".L%d\n",2+cLX);
+														inmain = cat(inmain,temp);
+														cLX += 1;
+													}
+| IF '(' condition ')' '{' exp '}' ELSE '{' exp '}'	{ funtionIFELSE($3,$6,$10);}
 | IF '(' condition ')' '{' exp '}' ELSE '{' REGISTER INIT exp '}'
-{ if($3) printf("%d\n",$6); else loadToReg($12,$10); }
+{
+	if($3) funtionIF($3,$6);
+	else {
+		loadToReg($12,$10);
+		temp = (char *)malloc(strlen(".L%d\n"));
+		sprintf(temp,".L%d\n",2+cLX);
+		inmain = cat(inmain,temp);
+		cLX += 1;
+	}
+}
 | IF '(' condition ')' '{' REGISTER INIT exp '}' ELSE '{' exp '}'
-{ if($3) loadToReg($8,$6); else printf("%d\n",$12); }
-| IF '(' condition ')' '{' REGISTER INIT exp '}' ELSE '{' REGISTER INIT exp '}'	{if($3){loadToReg($8,$6);}else{loadToReg($14,$12);}}
+{ 	if($3){
+		loadToReg($8,$6);
+		temp = (char *)malloc(strlen(".L%d\n"));
+		sprintf(temp,".L%d\n",2+cLX);
+		inmain = cat(inmain,temp);
+		cLX += 1;
+	}
+	else funtionIF($3,$12);
+}
+| IF '(' condition ')' '{' REGISTER INIT exp '}' ELSE '{' REGISTER INIT exp '}'
+{
+	if($3){loadToReg($8,$6);}else{loadToReg($14,$12);}
+	temp = (char *)malloc(strlen(".L%d\n"));
+	sprintf(temp,".L%d\n",2+cLX);
+	inmain = cat(inmain,temp);
+	cLX += 1;
+}
 ;
 
 loop:		FORWARD '(' exp ',' exp ')' 			{ funtionLOOP($3,$5); cReg = 1;}
@@ -288,12 +318,15 @@ void funtionIF(int con,int stat1)
 	temp = (char *)malloc(strlen(".L%d\n"));
 	sprintf(temp,".L%d\n",2+cLX);
 	inmain = cat(inmain,temp);
-	printf("%s,inmain");
 	cLX += 1;
 	if(con) printf("%d\n",stat1);
 }
 void funtionIFELSE(int con,int stat1,int stat2)
 {
+	temp = (char *)malloc(strlen(".L%d\n"));
+	sprintf(temp,".L%d\n",2+cLX);
+	inmain = cat(inmain,temp);
+
 	if(con) printf("%d\n",stat1);
 	else printf("%d\n",stat2);
 }
