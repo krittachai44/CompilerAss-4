@@ -223,7 +223,7 @@ void addtoReg(int in){
 
 void showDec(void){
 	temp = (char *)malloc(strlen("\tmovl\t$.LC%d, %%edi\n\tmovl\t$%d, %%eax\n\tcall\tprintf\n"));
-	sprintf(temp,"\tmovl\t$.LC%d, %%edi\n",countString);
+	sprintf(temp,"\tmovl\t$.LC%d, %%edi\n\tmovl\t$%d, %%eax\n\tcall\tprintf\n",countString);
 	inmain = cat(inmain,temp);
 }
 
@@ -339,7 +339,7 @@ void SHOWSTRING(string* str)
 	header = cat(header,temp);
 
 	temp = (char *)malloc(strlen("\tmovl\t$.LC%d, %%edi\n\tmovl\t$%d, %%eax\n\tcall\tprintf\n"));
-	sprintf(temp,"\tmovl\t$.LC%d, %%edi\n",countString);
+	sprintf(temp,"\tmovl\t$.LC%d, %%edi\n\tmovl\t$%d, %%eax\n\tcall\tprintf\n\n",countString);
 	inmain = cat(inmain,temp);
 
 	countString++;
@@ -352,7 +352,6 @@ int yyerror(string s)
 {
 	extern char *yytext;
 	printf("\r! ERROR : SYNTAX ERROR\n");
-
 	yyparse();
 }
 
@@ -387,11 +386,6 @@ int regToInt(string* regname)
 	char cregname[10];
 	strcpy(cregname, (*regname).c_str());
 
-	// movl	-8(%rbp), %eax
-	/*char* temp = (char *)malloc(strlen("\tmovl\t%d(%%rbp), %%eax\n"));
-	sprintf(temp,"\tmovl\t%d(%%rbp), %%eax\n",((cregname[4]-'A')*7)+100);
-	inmain = cat(inmain,temp);*/
-	//printf("%s",inmain);
 	return reg[cregname[4]-'A'];
 }
 
@@ -402,24 +396,6 @@ void loadToReg(int vval, string* regname)
 	strcpy(cregname, (*regname).c_str());
 	int regVal;
 	regVal = cregname[4]-'A';
-
-	/*if(inregTo){
-		// movl	%eax, -4(%rbp)
-		char* temp = (char *)malloc(strlen("\tmovl\t%%eax, %d(%%rbp)\n"));
-		sprintf(temp,"\tmovl\t%%eax, %d(%%rbp)\n",((cregname[4]-'A')*7)+100);
-		inmain = cat(inmain,temp);
-	}
-	else{
-		//movl	$2, -4(%rbp)  // #regA INIT 2
-		char* temp = (char *)malloc(strlen("\tmovl\t$%d, %d(%%rbp)\n"));
-		sprintf(temp,"\tmovl\t$%d, %d(%%rbp)\n",vval,((cregname[4]-'A')*7)+100);
-		inmain = cat(inmain,temp);
-	}
-	isReg = 0;
-	inregTo = 0;
-	printf("%s",inmain);
-	*/
-	//	printf("\tmovl\t$%d, %d(%rbp)\n",vval,(regVal*7)+100);
 	reg[cregname[4]-'A'] = vval;
 
 }
