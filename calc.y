@@ -226,7 +226,7 @@ void addtoReg(int in){
 void showDec(void){
 	headerPercentD();
 	temp = (char *)malloc(strlen("\tmovl\t$.LC%d, %%edi\n\tmovl\t$0, %%eax\n\tcall\tprintf\n\n"));
-	sprintf(temp,"\tmovl\t$.LC%d, %%edi\n\tmovl\t$0, %%eax\n\tcall\tprintf\n\n",lcPercentD,);
+	sprintf(temp,"\tmovl\t$.LC%d, %%edi\n\tmovl\t$0, %%eax\n\tcall\tprintf\n\n",lcPercentD);
 	inmain = cat(inmain,temp);
 
 }
@@ -304,7 +304,6 @@ void SHOWSTRING(string* str)
 	header	.LCCountString:
 	.string	"xxx"
 	//header
-
 
 	/*movl	-4(%rbp), %eax
 	movl	%eax, %esi
