@@ -22,7 +22,7 @@
 	void showDec(void);
 	void headerPercentD();
 
-	void initINloop(int count,string* regin,int val);
+	void initINloop(int count,string* regin,char oop,int val);
 
 	char* cat(char* old,char* nw); // concast string
 
