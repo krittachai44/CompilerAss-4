@@ -82,7 +82,7 @@
 %%
 
 input:		/* empty */
-| exp	{ cout << "= " << $1 << endl; cReg = 0; printf("%s\n",inmain); }
+| exp	{ cout << "= " << $1 << endl; cReg = 0;printf("%s\n",header); printf("%s\n",inmain); }
 | compare
 | loop	{printf("%s\n",header); printf("%s\n",inmain);}
 | init	{printf("%s\n",inmain);}
@@ -225,8 +225,8 @@ void addtoReg(int in){
 
 void showDec(void){
 	headerPercentD();
-	temp = (char *)malloc(strlen("\tmovl\t$.LC%d, %%edi\n\tmovl\t$%d, %%eax\n\tcall\tprintf\n\n"));
-	sprintf(temp,"\tmovl\t$.LC%d, %%edi\n\tmovl\t$%d, %%eax\n\tcall\tprintf\n\n",lcPercentD);
+	temp = (char *)malloc(strlen("\tmovl\t$.LC%d, %%edi\n\tmovl\t$0, %%eax\n\tcall\tprintf\n\n"));
+	sprintf(temp,"\tmovl\t$.LC%d, %%edi\n\tmovl\t$0, %%eax\n\tcall\tprintf\n\n",lcPercentD,);
 	inmain = cat(inmain,temp);
 
 }
@@ -277,7 +277,7 @@ void funtionLOOP(int con,int stat1)
 	sprintf(temp,"\tmovl\tr%d, %%esi\n",cReg-1);//cause cReg is assign fro count loop
 	inmain = cat(inmain,temp);
 	/////
-	temp = (char *)malloc(strlen("\tmovl\t$.LC%d, %%edi\n\tmovl\t$%d, %%eax\n\tcall\tprintf\n"));
+	temp = (char *)malloc(strlen("\tmovl\t$.LC%d, %%edi\n\tmovl\t$0, %%eax\n\tcall\tprintf\n"));
 	sprintf(temp,"\tmovl\t$.LC%d, %%edi\n\tmovl\t$0, %%eax\n\tcall\tprintf\n",countString);
 	inmain = cat(inmain,temp);
 	/*int i=0;
@@ -356,8 +356,8 @@ void SHOWSTRING(string* str)
 	sprintf(temp,"\"\n\n");
 	header = cat(header,temp);
 
-	temp = (char *)malloc(strlen("\tmovl\t$.LC%d, %%edi\n\tmovl\t$%d, %%eax\n\tcall\tprintf\n"));
-	sprintf(temp,"\tmovl\t$.LC%d, %%edi\n\tmovl\t$%d, %%eax\n\tcall\tprintf\n\n",countString);
+	temp = (char *)malloc(strlen("\tmovl\t$.LC%d, %%edi\n\tmovl\t$0, %%eax\n\tcall\tprintf\n"));
+	sprintf(temp,"\tmovl\t$.LC%d, %%edi\n\tmovl\t$0, %%eax\n\tcall\tprintf\n\n",countString);
 	inmain = cat(inmain,temp);
 
 	countString++;
