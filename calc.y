@@ -20,6 +20,7 @@
 	void addtoReg(int in);
 
 	void showDec(void);
+	void headerPercentD();
 
 	char* cat(char* old,char* nw); // concast string
 
@@ -38,6 +39,7 @@
 
 	int r[13]={0};//r0-r12
 	int cReg = 0;
+	int alreadyP = 0;
 	int cLoop = 0;
 
 %}
@@ -229,6 +231,17 @@ void showDec(void){
 	sprintf(temp,"\tmovl\tr%d, %%esi\n\tmovl\t$.LC%d, %%edi\n\tmovl\t$0, %%eax\n\tcall\tprintf\n\n",cReg-1,lcPercentD);
 	inmain = cat(inmain,temp);
 
+}
+
+void headerPercentD(){
+	if(!alreadyP){
+		temp = (char *)malloc(strlen("\n.LC%d\n\t.string\t\"%%d\"\n"));
+		sprintf(temp,".LC%d\n\t.string\t\"%%d\"\n",countString);
+		header = cat(header,temp);
+		alreadyP = 1;
+		lcPercentD = countString;
+		countString++;
+	}
 }
 
 void funtionIF(int con,int stat1)
