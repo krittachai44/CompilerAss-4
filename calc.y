@@ -189,9 +189,6 @@ compare:	IF '(' condition ')' '{' exp '}'  		{ funtionIF($3,$6);}
 | IF '(' condition ')' '{' REGISTER INIT exp '}' ELSE '{' SHOW_DEC exp '}'
 { 	if($3){
 		loadToReg($8,$6);
-		temp = (char *)malloc(strlen(".L%d\n"));
-		sprintf(temp,".L%d\n",2+cLX);
-		inmain = cat(inmain,temp);
 
 		if($3){loadToReg($8,$6);}else{printf("%d",$13);}
 	 //INIT IN IF
