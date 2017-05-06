@@ -401,6 +401,7 @@ void initINloop(int count,string* regin,char oop,int val){
 	}
 	temp = (char *)malloc(strlen("\taddl\t$1, r%d"));
 	sprintf(temp,"\taddl\t$1, r%d",cReg);
+	inmain = cat(inmain,temp);
 
 	for(;count>0;count--)
 	{
