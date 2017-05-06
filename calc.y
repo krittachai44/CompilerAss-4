@@ -175,7 +175,7 @@ loop:		FORWARD '(' exp ',' exp ')' 			{ funtionLOOP($3,$5); cReg = 0;}
 													{ int i = 0 ; for(;i<$3;i++) funtionLOOP($7,$9); }
 ;
 
-command:	SHOW_DEC exp 	{ showDec(); $$=$2; printf("%s\n",inmain);}
+command:	SHOW_DEC exp 	{ showDec(); $$=$2;}
 ;
 
 init:		REGISTER INIT exp 	{ 	loadToReg($3,$1);
@@ -222,9 +222,14 @@ void addtoReg(int in){
 }
 
 void showDec(void){
-	temp = (char *)malloc(strlen("\tmovl\t$.LC%d, %%edi\n\tmovl\t$%d, %%eax\n\tcall\tprintf\n"));
-	sprintf(temp,"\tmovl\t$.LC%d, %%edi\n\tmovl\t$%d, %%eax\n\tcall\tprintf\n",countString);
+	temp = (char *)malloc(strlen("\n.LC%d\n\t.string\t\"%%d\"\n"));
+	sprintf(temp,".LC%d\n\t.string\t\"%%d\"\n",countString);
+	header = cat(header,temp);
+
+	temp = (char *)malloc(strlen("\tmovl\t$.LC%d, %%edi\n\tmovl\t$%d, %%eax\n\tcall\tprintf\n\n"));
+	sprintf(temp,"\tmovl\t$.LC%d, %%edi\n\tmovl\t$%d, %%eax\n\tcall\tprintf\n\n",countString);
 	inmain = cat(inmain,temp);
+
 }
 
 void funtionIF(int con,int stat1)
@@ -252,9 +257,7 @@ void funtionLOOP(int con,int stat1)
 	jle	.L3
 
 	*/
-	temp = (char *)malloc(strlen("\n.LC%d\n\t.string\t\"%%d\"\n"));
-	sprintf(temp,".LC%d\n\t.string\t\"%%d\"\n",countString);
-	header = cat(header,temp);
+	showDec();
 
 	temp = (char *)malloc(strlen("\tmovl\t$0, r%d\n\tjmp .L2\n.L3:"));
 	sprintf(temp,"\tmovl\t$0, r%d\n\tjmp .L%d\n.L%d:\n",cReg,2+cLoop,3+cLoop);
@@ -298,6 +301,9 @@ void SHOWSTRING(string* str)
 	movl	$.LC0, %edi
 	movl	$0, %eax
 	call	printf*/
+	temp = (char *)malloc(strlen("\n.LC%d\n\t.string\t\""));
+	sprintf(temp,".LC%d\n\t.string\t\"",countString);
+	header = cat(header,temp);
 
 	int i = 7;
 	while(a[i] != '^')
