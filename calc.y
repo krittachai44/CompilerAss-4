@@ -36,6 +36,8 @@
 	int r[13]={0};//r0-r12
 	int cReg = 0;
 
+	int cLoop = 0;
+
 %}
 
 %union{
@@ -244,11 +246,11 @@ void funtionLOOP(int con,int stat1)
 	header = cat(header,temp);
 
 	temp = (char *)malloc(strlen("\tmovl\t$0, r%d\n\tjmp .L2\n.L3:"));
-	sprintf(temp,"\tmovl\t$0, r%d\n\tjmp .L2\n.L3:\n",cReg);
+	sprintf(temp,"\tmovl\t$0, r%d\n\tjmp .L%d\n.L%d:\n",cReg,2+cLoop,3+cLoop);
 	inmain = cat(inmain,temp);
 	//value what  want to print
 	temp = (char *)malloc(strlen("\tmovl\tr%d, %%esi\n"));
-	sprintf(temp,"\tmovl\tr%d, %%esi\n",cReg);
+	sprintf(temp,"\tmovl\tr%d, %%esi\n",cReg-1);//cause cReg is assign fro count loop
 	inmain = cat(inmain,temp);
 	/////
 	temp = (char *)malloc(strlen("\tmovl\t$.LC%d, %%edi\n\tmovl\t$%d, %%eax\n\tcall\tprintf\n"));
@@ -261,7 +263,7 @@ void funtionLOOP(int con,int stat1)
 		printf("%d\n",stat1);
 	}*/
 	temp = (char *)malloc(strlen("\n\taddl\t$1, r%d\n.L2:\n\tcmpl\t$%d, r%d\n\tjle .L3"));
-	sprintf(temp,"\n\taddl\t$1, r%d\n.L2:\n\tcmpl\t$%d, r%d\n\tjle .L3",cReg,con-1,cReg);
+	sprintf(temp,"\n\taddl\t$1, r%d\n.L%d:\n\tcmpl\t$%d, r%d\n\tjle .L%d",cReg,2+cLoop,con-1,cReg,3+cLoop);
 	inmain = cat(inmain,temp);
 	cReg++;
 	countString++;
