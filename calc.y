@@ -168,7 +168,7 @@ compare:	IF '(' exp ')' '{' exp '}'  				{ funtionIF($3,$6); }
 | IF '(' exp ')' '{' REGISTER INIT exp '}' ELSE '{' REGISTER INIT exp '}'	{if($3){loadToReg($8,$6);}else{loadToReg($14,$12);}}
 ;
 
-loop:		FORWARD '(' exp ',' exp ')' 			{ funtionLOOP($3,$5);}
+loop:		FORWARD '(' exp ',' exp ')' 			{ funtionLOOP($3,$5); cReg = 0; r[0] = $$;}
 			| FORWARD'('exp ',' FORWARD'('exp','exp')'')'
 													{ int i = 0 ; for(;i<$3;i++) funtionLOOP($7,$9); }
 ;
