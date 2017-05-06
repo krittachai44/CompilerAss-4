@@ -193,7 +193,7 @@ compare:	IF '(' condition ')' '{' exp '}'  		{ funtionIF($3,$6);}
 		sprintf(temp,".L%d\n",2+cLX);
 		inmain = cat(inmain,temp);
 
-		if($3){loadToReg($8,$6);}else{loadToReg($14,$12);}
+		if($3){loadToReg($8,$6);}else{printf("%d",$13);}
 	 //INIT IN IF
 		 temp = (char *)malloc(strlen("	movl	r0, %d(%%rbp)\n\n"));
 		 char a[100];
@@ -207,9 +207,7 @@ compare:	IF '(' condition ')' '{' exp '}'  		{ funtionIF($3,$6);}
 		inmain = cat(inmain,temp);
 
 	//INIT IN ELSE
-		temp = (char *)malloc(strlen("\tmovl\tr%d,r%d\n"));
-		sprintf(temp,"\tmovl\tr%d,r%d\n",cReg,cReg-1);
-		inmain = cat(inmain,temp);
+		showDec();
 
 
 
