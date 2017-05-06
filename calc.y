@@ -159,8 +159,8 @@ exp:		REGISTER	{ addtoReg($1); $$ = regToInt($1); }
 condition:	exp COMPARE exp		{
 						// 		cmpl	$1, -8(%rbp)
 						// 		jne		.L2
-								temp = (char *)malloc(strlen("\tcmpl\tr%d, r%d\n\tjne\t.L%d\n"));
-								sprintf(temp,"\tcmpl\tr%d, r%d\n\tjne\t.L%d\n",cReg,cReg-1,2+cLX);
+								temp = (char *)malloc(strlen("\tcmpl\tr%d, r%d\n"));
+								sprintf(temp,"\tcmpl\tr%d, r%d\n",cReg,cReg-1);
 								inmain = cat(inmain,temp);
 
 								$$=$1==$3?1:0; cReg=0;}
@@ -198,9 +198,22 @@ compare:	IF '(' condition ')' '{' exp '}'  		{ funtionIF($3,$6);}
 }
 | IF '(' condition ')' '{' REGISTER INIT exp '}' ELSE '{' REGISTER INIT exp '}'
 {
+	temp = (char *)malloc(strlen("\tjne\t.L%d\n"));
+	sprintf(temp,"\tjne\t.L%d\n",2+cLX);
+	inmain = cat(inmain,temp);
+
 	if($3){loadToReg($8,$6);}else{loadToReg($14,$12);}
+
+	temp = (char *)malloc(strlen("\tmovl\tr%d,r%d\n"));
+	sprintf(temp,"\tmovl\tr%d,r%d\n",cReg,cReg+1);
+	inmain = cat(inmain,temp);
+
 	temp = (char *)malloc(strlen(".L%d\n"));
 	sprintf(temp,".L%d\n",2+cLX);
+	inmain = cat(inmain,temp);
+
+	temp = (char *)malloc(strlen("\tmovl\tr%d,r%d\n"));
+	sprintf(temp,"\tmovl\tr%d,r%d\n",cReg,cReg+1);
 	inmain = cat(inmain,temp);
 	cLX += 1;
 }
