@@ -267,8 +267,6 @@ void funtionLOOP(int con,int stat1)
 	jle	.L3
 
 	*/
-	showDec();
-
 	temp = (char *)malloc(strlen("\tmovl\t$0, r%d\n\tjmp .L2\n.L3:"));
 	sprintf(temp,"\tmovl\t$0, r%d\n\tjmp .L%d\n.L%d:\n",cReg,2+cLoop,3+cLoop);
 	inmain = cat(inmain,temp);
@@ -277,9 +275,7 @@ void funtionLOOP(int con,int stat1)
 	sprintf(temp,"\tmovl\tr%d, %%esi\n",cReg-1);//cause cReg is assign fro count loop
 	inmain = cat(inmain,temp);
 	/////
-	temp = (char *)malloc(strlen("\tmovl\t$.LC%d, %%edi\n\tmovl\t$0, %%eax\n\tcall\tprintf\n"));
-	sprintf(temp,"\tmovl\t$.LC%d, %%edi\n\tmovl\t$0, %%eax\n\tcall\tprintf\n",countString);
-	inmain = cat(inmain,temp);
+	showDec();
 	/*int i=0;
 	for(;i<con;i++)
 	{
