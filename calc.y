@@ -106,7 +106,7 @@ input:		/* empty */
 				allc = cat(header,inmain);
 
 					FILE *fptr;
-				    	fptr = fopen("assem.txt","a");
+				    	fptr = fopen("assem.txt","w+");
 					fprintf(fptr,allc);
 		    			fclose(fptr);
 
