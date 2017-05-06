@@ -172,9 +172,11 @@ compare:	IF '(' exp ')' '{' exp '}'  				{ funtionIF($3,$6); }
 | IF '(' exp ')' '{' REGISTER INIT exp '}' ELSE '{' REGISTER INIT exp '}'	{if($3){loadToReg($8,$6);}else{loadToReg($14,$12);}}
 ;
 
-loop:		FORWARD '(' exp ',' exp ')' 			{ funtionLOOP($3,$5); cReg = 0;}
-			| FORWARD'('exp ',' FORWARD'('exp','exp')'')'
-													{ int i = 0 ; for(;i<$3;i++) funtionLOOP($7,$9); }
+loop:		FORWARD '(' exp ',' exp ')' 			{ funtionLOOP($3,$5); cReg = 1;}
+			| FORWARD'('exp','SHOW_DEC exp')'		{ funtionLOOP($3,$6); cReg = 1;}
+			| FORWARD'('exp ',' FORWARD'('exp','exp')'')' {{ int i = 0 ; for(;i<$3;i++) funtionLOOP($7,$9); }}
+			FORWARD'('exp ',' FORWARD'('exp','SHOW_DEC exp')'')'
+													{ int i = 0 ; for(;i<$3;i++) funtionLOOP($7,$10); }
 ;
 
 command:	SHOW_DEC exp 	{ showDec(); $$=$2;}
@@ -267,13 +269,11 @@ void funtionLOOP(int con,int stat1)
 	jle	.L3
 
 	*/
+
 	temp = (char *)malloc(strlen("\tmovl\t$0, r%d\n\tjmp .L2\n.L3:"));
 	sprintf(temp,"\tmovl\t$0, r%d\n\tjmp .L%d\n.L%d:\n",cReg,2+cLoop,3+cLoop);
 	inmain = cat(inmain,temp);
 	//value what  want to print
-	temp = (char *)malloc(strlen("\tmovl\tr%d, %%esi\n"));
-	sprintf(temp,"\tmovl\tr%d, %%esi\n",cReg-1);//cause cReg is assign fro count loop
-	inmain = cat(inmain,temp);
 	/////
 	showDec();
 	/*int i=0;
@@ -283,7 +283,7 @@ void funtionLOOP(int con,int stat1)
 		printf("%d\n",stat1);
 	}*/
 	temp = (char *)malloc(strlen("\n\taddl\t$1, r%d\n.L2:\n\tcmpl\t$%d, r%d\n\tjle .L3\n\n"));
-	sprintf(temp,"\n\taddl\t$1, r%d\n.L%d:\n\tcmpl\t$%d, r%d\n\tjle .L%d\n\n",cReg,2+cLoop,con-2,cReg,3+cLoop);
+	sprintf(temp,"\n\taddl\t$1, r%d\n.L%d:\n\tcmpl\t$%d, r%d\n\tjle .L%d\n\n",cReg,2+cLoop,con-1,cReg,3+cLoop);
 	inmain = cat(inmain,temp);
 	cReg++;
 	countString++;
