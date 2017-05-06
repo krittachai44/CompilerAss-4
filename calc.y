@@ -341,7 +341,7 @@ void initINloop(int count,string* regin,char oop,int val){
 			sprintf(temp,"	addl	r1, r0\n\n");
 			inmain = cat(inmain,temp);
 
-			cReg = 1; r[0] = $$;
+			cReg = 1;
 			reg[a[4]-'A'] = reg[a[4]-'A'] + val;
 		}
 		else if(oop == '-'){
@@ -349,7 +349,7 @@ void initINloop(int count,string* regin,char oop,int val){
 			sprintf(temp,"	subl	r1, r0\n\n");
 			inmain = cat(inmain,temp);
 
-			cReg = 1; r[0] = $$;
+			cReg = 1;
 			reg[a[4]-'A'] = reg[a[4]-'A'] - val;
 		}
 		else if(oop == '*')	{
@@ -357,7 +357,7 @@ void initINloop(int count,string* regin,char oop,int val){
 			sprintf(temp,"	imull	r1, r0\n\n");
 			inmain = cat(inmain,temp);
 
-			cReg = 1; r[0] = $$;
+			cReg = 1;
 			reg[a[4]-'A'] = reg[a[4]-'A'] * val;
 		}
 		else if(oop == '/')	{
@@ -365,7 +365,7 @@ void initINloop(int count,string* regin,char oop,int val){
 			sprintf(temp,"	idivl	r1, r0\n\n");
 			inmain = cat(inmain,temp);
 
-			cReg = 1; r[0] = $$;
+			cReg = 1;
 			reg[a[4]-'A'] = reg[a[4]-'A'] / val;
 		}
 		else if(oop == 'M')	{
@@ -373,7 +373,7 @@ void initINloop(int count,string* regin,char oop,int val){
 			sprintf(temp,"	movl	r1, r0\n\n");
 			inmain = cat(inmain,temp);
 
-			cReg = 1; r[0] = $$;
+			cReg = 1;
 			reg[a[4]-'A'] = reg[a[4]-'A'] % val;
 		}
 		headerPercentD();
