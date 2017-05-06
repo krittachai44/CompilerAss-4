@@ -50,7 +50,7 @@
 %union{
 	int		int_val;
 	string*	op_val;
-}
+
 
 %start	input
 
