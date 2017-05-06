@@ -19,8 +19,7 @@
 	void addtoReg(string* in);
 	void addtoReg(int in);
 
-	/*void showDec(string* in);
-	void showDec(int in);*/
+	void showDec(void);
 
 	char* cat(char* old,char* nw); // concast string
 
@@ -176,7 +175,7 @@ loop:		FORWARD '(' exp ',' exp ')' 			{ funtionLOOP($3,$5); cReg = 0;}
 													{ int i = 0 ; for(;i<$3;i++) funtionLOOP($7,$9); }
 ;
 
-command:	SHOW_DEC exp 	{ /*showDec($2);*/ $$=$2; printf("%s\n",inmain);}
+command:	SHOW_DEC exp 	{ showDec(); $$=$2; printf("%s\n",inmain);}
 ;
 
 init:		REGISTER INIT exp 	{ 	loadToReg($3,$1);
@@ -222,33 +221,12 @@ void addtoReg(int in){
 	cReg++;
 }
 
-void showDec(string* in){
-	char a[100];
-	strcpy(a,(*in).c_str());
-	r[cReg]=reg[a[4]-'A'];
-
-	temp = (char *)malloc(strlen("	movl	%d(%%rbp), r%d\n"));
-	sprintf(temp,"	movl	%d(%%rbp), r%d\n",((a[4]-'A')*8)+200,cReg);
-	inmain = cat(inmain,temp);
-
+void showDec(void){
 	temp = (char *)malloc(strlen("\tmovl\t$.LC%d, %%edi\n\tmovl\t$%d, %%eax\n\tcall\tprintf\n"));
 	sprintf(temp,"\tmovl\t$.LC%d, %%edi\n",countString);
 	inmain = cat(inmain,temp);
-
-	cReg++;
 }
-void showDec(int in){
-	r[cReg] = in;
 
-	temp = (char *)malloc(strlen("	movl	$%d, r%d\n"));
-	sprintf(temp,"	movl	$%d, r%d\n",r[cReg],cReg);
-	inmain = cat(inmain,temp);
-
-	temp = (char *)malloc(strlen("\tmovl\t$.LC%d, %%edi\n\tmovl\t$%d, %%eax\n\tcall\tprintf\n"));
-	sprintf(temp,"\tmovl\t$.LC%d, %%edi\n",countString);
-	inmain = cat(inmain,temp);
-	cReg++;
-}
 void funtionIF(int con,int stat1)
 {
 	if(con) printf("%d\n",stat1);
