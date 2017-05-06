@@ -286,7 +286,7 @@ void funtionIF(int con,int stat1)
 // 		xxx
 // .L2:
 	temp = (char *)malloc(strlen(".L%d\n"));
-	sprintf(temp,".L%d\n",cLX);
+	sprintf(temp,".L%d\n",2+cLX);
 	inmain = cat(inmain,temp);
 	cLX += 1;
 	if(con) printf("%d\n",stat1);
