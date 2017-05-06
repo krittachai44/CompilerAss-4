@@ -333,6 +333,7 @@ void initINloop(int count,string* regin,char oop,int val){
 	temp = (char *)malloc(strlen("\tmovl\t$0, r%d\n\tjmp\t.L%d\n.L%d\n"));
 	sprintf(temp,"\tmovl\t$0, r%d\n\tjmp\t.L%d\n.L%d",cReg,2+cLX,3+cLX);
 	cReg+=1;
+	inmain = cat(inmain,cat);
 	char a[6];
 	strcpy(a,(*regin).c_str());
 	for(;count>0;count--)
