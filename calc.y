@@ -187,12 +187,14 @@ compare:	IF '(' condition ')' '{' exp '}'  		{ funtionIF($3,$6);}
 	sprintf(temp,".L%d\n",2+cLX);
 	inmain = cat(inmain,temp);
 
-	temp = (char *)malloc(strlen("	movl	%d,r1\n\n"));
-	sprintf(temp,"	movl	%d,r1\n",$12);
+	temp = (char *)malloc(strlen("	movl	%d,r0\n\n"));
+	sprintf(temp,"	movl	%d,r0\n",$12);
 	inmain = cat(inmain,temp);
 
-	temp = (char *)malloc(strlen("\tmovl\tr1,r%d\n"));
-	sprintf(temp,"\tmovl\tr1,r%d\n",cReg);
+	temp = (char *)malloc(strlen("	movl	r0, %d(%%rbp)\n\n"));
+	char a[100];
+	strcpy(a,(*$10).c_str());
+	sprintf(temp,"	movl	r0, %d(%%rbp)\n\n",((a[4]-'A')*8)+200);
 	inmain = cat(inmain,temp);
 
 	cLX += 1;
