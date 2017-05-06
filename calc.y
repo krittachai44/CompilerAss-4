@@ -306,9 +306,11 @@ void SHOWSTRING(string* str)
 	movl	$.LC0, %edi
 	movl	$0, %eax
 	call	printf*/
-	temp = (char *)malloc(strlen("\n.LC%d\n\t.string\t\""));
-	sprintf(temp,".LC%d\n\t.string\t\"",countString);
-	header = cat(header,temp);
+	if(!alreadyP){
+		temp = (char *)malloc(strlen("\n.LC%d\n\t.string\t\""));
+		sprintf(temp,".LC%d\n\t.string\t\"",countString);
+		header = cat(header,temp);
+	}
 
 	int i = 7;
 	while(a[i] != '^')
@@ -322,11 +324,13 @@ void SHOWSTRING(string* str)
 		}
 		else if( a[i]=='#'&&a[i+1]=='r'&&a[i+2]=='e'&&a[i+3]=='g'&&a[i+4]>='A'&&a[i+4]<='Z'){
 			//header
-			temp = (char *)malloc(2);
-			sprintf(temp,"%%d");
-			header = cat(header,temp);
-			alreadyP = 1;
-			lcPercentD = countString;
+			if(!alreadyP){
+				temp = (char *)malloc(2);
+				sprintf(temp,"%%d");
+				header = cat(header,temp);
+				alreadyP = 1;
+				lcPercentD = countString;
+			}
 			//inmain
 			/*
 			movl	-4(%rbp), %esi
