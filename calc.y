@@ -374,7 +374,6 @@ void initINloop(int count,string* regin,char oop,int val){
 	if(oop == '+'){
 		temp = (char *)malloc(strlen("	addl	r%d, r%d\n"));
 		sprintf(temp,"	addl	r%d, r%d\n\n",cReg-1,cReg-2);
-		cReg = 1;
 		inmain = cat(inmain,temp);
 
 	}
@@ -382,29 +381,23 @@ void initINloop(int count,string* regin,char oop,int val){
 		temp = (char *)malloc(strlen("	subl	r1, r0\n"));
 		sprintf(temp,"	subl	r%d, r%d\n\n",cReg-1,cReg-2);
 		inmain = cat(inmain,temp);
-
-		cReg = 1;
 	}
 	else if(oop == '*')	{
 		temp = (char *)malloc(strlen("	imull	r1, r0\n"));
 		sprintf(temp,"	imull	r%d, r%d\n\n",cReg-1,cReg-2);
 		inmain = cat(inmain,temp);
-
-		cReg = 1;
 	}
 	else if(oop == '/')	{
 		temp = (char *)malloc(strlen("	idivl	r1, r0\n"));
 		sprintf(temp,"	idivl	r%d, r%d\n\n",cReg-1,cReg-2);
 		inmain = cat(inmain,temp);
-
-		cReg = 1;
 	}
 	temp = (char *)malloc(strlen("\tmovl	r%d, %d(%%rbp)\n"));
-	sprintf(temp,"\tmovl	r%d, %d(%%rbp)\n",cReg,((a[4]-'A')*8)+200);
+	sprintf(temp,"\tmovl	r%d, %d(%%rbp)\n",cReg-2,((a[4]-'A')*8)+200);
 	inmain = cat(inmain,temp);
-	
+
 	temp = (char *)malloc(strlen("\taddl\t$1, r%d\n"));
-	sprintf(temp,"\taddl\t$1, r%d\n",cReg);
+	sprintf(temp,"\taddl\t$1, r%d\n",cReg-3);
 	inmain = cat(inmain,temp);
 
 	for(;count>0;count--)
@@ -425,6 +418,7 @@ void initINloop(int count,string* regin,char oop,int val){
 			reg[a[4]-'A'] = reg[a[4]-'A'] % val;
 		}
 	}
+	cReg = 1;
 	//	.L2:
 	// 		cmpl	$4, -4(%rbp)
 	// 		jle	.L3
