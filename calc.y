@@ -184,7 +184,7 @@ compare:	IF '(' condition ')' '{' exp '}'  		{ funtionIF($3,$6);}
 														inmain = cat(inmain,temp);
 														cLX += 1;
 													}
-| IF '(' condition ')' '{' exp '}' ELSE '{' exp '}'	{ funtionIFELSE($3,$6,$10);}
+| IF '(' condition ')' '{' exp '}' ELSE '{' SHOW_DEC exp '}'	{ funtionIFELSE($3,$6,$11);}
 | IF '(' condition ')' '{' exp '}' ELSE '{' REGISTER INIT exp '}'
 {
 	if($3==0)loadToReg($12,$10);
@@ -380,6 +380,12 @@ void funtionIFELSE(int con,int stat1,int stat2)
 	temp = (char *)malloc(strlen(".L%d\n"));
 	sprintf(temp,".L%d\n",2+cLX);
 	inmain = cat(inmain,temp);
+
+	temp = (char *)malloc(strlen("	movl	%d,r1\n\n"));
+	sprintf(temp,"	movl	%d,r1\n",stat2);
+	inmain = cat(inmain,temp);
+
+	showDec();
 
 	if(con) printf("%d\n",stat1);
 	else printf("%d\n",stat2);
