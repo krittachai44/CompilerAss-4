@@ -93,20 +93,20 @@ input:		/* empty */
 		| EXIT {
 				temp = (char *)malloc(strlen("\t.text\n\t.global\tmain\n\t.typemain,@function\n\nmain:\n.LFB0:\n\t.cfi_startproc\n"));
 				sprintf(temp,"\t.text\n\t.global\tmain\n\t.typemain,@function\n\nmain:\n.LFB0:\n\t.cfi_startproc\n");
-				inmain = cat(header,temp);
+				header = cat(header,temp);
 
 				printf("%s\n",header);
 
 				temp = (char *)malloc(strlen("\tmovl\t$0,%%eax\n\tleave\n\tret\n\t.cfi_endproc\n"));
 				sprintf(temp,"\tmovl\t$0,%%eax\n\tleave\n\tret\n\t.cfi_endproc\n");
-				inmain = cat(header,inmain);
+				inmain = cat(inmain,temp);
 
 				printf("%s\n",inmain);
 
 				allc = cat(header,inmain);
 
 					FILE *fptr;
-				    	fptr = fopen("assem.txt", "a");
+				    	fptr = fopen("assem.txt");
 					fprintf(fptr,allc);
 		    			fclose(fptr);
 
