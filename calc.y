@@ -320,6 +320,7 @@ void addtoReg(int in){
 
 
 void initINloop(int count,string* regin,char oop,int val){
+	int c = count;
 	//	 	movl	$0, -4(%rbp)
 	// 		jmp	.L2
 	// .L3:
@@ -336,6 +337,7 @@ void initINloop(int count,string* regin,char oop,int val){
 	inmain = cat(inmain,temp);
 	char a[6];
 
+	strcpy(a,(*regin).c_str());
 
 	temp = (char *)malloc(strlen("	movl	%d(%%rbp), r%d\n"));
 	sprintf(temp,"	movl	%d(%%rbp), r%d\n",((a[4]-'A')*8)+200,cReg);
@@ -347,8 +349,6 @@ void initINloop(int count,string* regin,char oop,int val){
 	cReg+=1;
 	inmain = cat(inmain,temp);
 
-
-	strcpy(a,(*regin).c_str());
 	if(oop == '+'){
 		temp = (char *)malloc(strlen("	addl	r%d, r%d\n"));
 		sprintf(temp,"	addl	r%d, r%d\n\n",cReg-1,cReg-2);
@@ -400,7 +400,7 @@ void initINloop(int count,string* regin,char oop,int val){
 	// 		cmpl	$4, -4(%rbp)
 	// 		jle	.L3
 	temp = (char *)malloc(strlen(".L%d\n\tcmpl\t$%d, %d(%%rbp)\n\tjle\t.L%d\n"));
-	sprintf(temp,".L%d\n\tcmpl\t$%d, %d(%%rbp)\n\tjle\t.L%d\n",2+cLX,count-1,((a[4]-'A')*8)+200,3+cLX);
+	sprintf(temp,".L%d\n\tcmpl\t$%d, %d(%%rbp)\n\tjle\t.L%d\n",2+cLX,c-1,((a[4]-'A')*8)+200,3+cLX);
 	inmain = cat(inmain,temp);
 }
 
