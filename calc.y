@@ -288,6 +288,7 @@ void funtionIF(int con,int stat1)
 	temp = (char *)malloc(strlen(".L%d\n"));
 	sprintf(temp,".L%d\n",2+cLX);
 	inmain = cat(inmain,temp);
+	printf("%s,inmain");
 	cLX += 1;
 	if(con) printf("%d\n",stat1);
 }
