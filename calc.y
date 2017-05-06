@@ -192,6 +192,27 @@ compare:	IF '(' condition ')' '{' exp '}'  		{ funtionIF($3,$6);}
 		temp = (char *)malloc(strlen(".L%d\n"));
 		sprintf(temp,".L%d\n",2+cLX);
 		inmain = cat(inmain,temp);
+
+		if($3){loadToReg($8,$6);}else{loadToReg($14,$12);}
+	 //INIT IN IF
+		 temp = (char *)malloc(strlen("	movl	r0, %d(%%rbp)\n\n"));
+		 char a[100];
+		 strcpy(a,(*$6).c_str());
+		 sprintf(temp,"	movl	r0, %d(%%rbp)\n\n",((a[4]-'A')*8)+200);
+		 inmain = cat(inmain,temp);
+
+	//FIND ELSE
+		temp = (char *)malloc(strlen(".L%d\n"));
+		sprintf(temp,".L%d\n",2+cLX);
+		inmain = cat(inmain,temp);
+
+	//INIT IN ELSE
+		temp = (char *)malloc(strlen("\tmovl\tr%d,r%d\n"));
+		sprintf(temp,"\tmovl\tr%d,r%d\n",cReg,cReg-1);
+		inmain = cat(inmain,temp);
+
+
+
 		cLX += 1;
 	}
 	else funtionIF($3,$13);
