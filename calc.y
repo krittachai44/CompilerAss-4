@@ -337,8 +337,8 @@ void initINloop(int count,string* regin,char oop,int val){
 	for(;count>0;count--)
 	{
 		if(oop == '+'){
-			temp = (char *)malloc(strlen("	addl	r1, r0\n"));
-			sprintf(temp,"	addl	r1, r0\n\n");
+			temp = (char *)malloc(strlen("	addl	r2, r1\n"));
+			sprintf(temp,"	addl	r2, r1\n\n");
 			inmain = cat(inmain,temp);
 
 			temp = (char *)malloc(strlen("	movl	r0, %d(%%rbp)\n"));
@@ -393,7 +393,7 @@ void initINloop(int count,string* regin,char oop,int val){
 		}
 		headerPercentD();
 		temp = (char *)malloc(strlen("\tmovl\tr%d, %%esi\n\tmovl\t$.LC%d, %%edi\n\tmovl\t$0, %%eax\n\tcall\tprintf\n\n"));
-		sprintf(temp,"\tmovl\tr%d, %%esi\n\tmovl\t$.LC%d, %%edi\n\tmovl\t$0, %%eax\n\tcall\tprintf\n\n",cReg-1,lcPercentD);
+		sprintf(temp,"\tmovl\tr%d, %%esi\n\tmovl\t$.LC%d, %%edi\n\tmovl\t$0, %%eax\n\tcall\tprintf\n\n",cReg,lcPercentD);
 		inmain = cat(inmain,temp);
 	}
 }
