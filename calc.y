@@ -82,7 +82,7 @@
 %%
 
 input:		/* empty */
-| exp	{ cout << "= " << $1 << endl; cReg = 0;}
+| exp	{ cout << "= " << $1 << endl; cReg = 0; printf("%d\n",$1); }
 | compare {cReg= 0;}
 | loop	{cReg= 0;}
 | init	{cReg= 0;}
@@ -182,7 +182,7 @@ condition:	exp COMPARE exp		{
 						// 		cmpl	$1, -8(%rbp)
 						// 		jne		.L2
 								temp = (char *)malloc(strlen("\tcmpl\tr%d, r%d\n"));
-								sprintf(temp,"\tcmpl\tr%d, r%d\n",cReg,cReg-1);
+								sprintf(temp,"\tcmpl\tr%d, r%d\n",cReg-2,cReg-1);
 								inmain = cat(inmain,temp);
 
 								temp = (char *)malloc(strlen("\tjne\t.L%d\n"));
@@ -296,6 +296,7 @@ command:	SHOW_DEC exp 	{ showDec(); $$=$2;}
 ;
 
 init:		REGISTER INIT exp 	{ 	loadToReg($3,$1);
+									printf("%d/n",$3);
 									temp = (char *)malloc(strlen("	movl	r0, %d(%%rbp)\n\n"));
 									char a[100];
 									strcpy(a,(*$1).c_str());
@@ -375,7 +376,6 @@ void initINloop(int count,string* regin,char oop,int val){
 		temp = (char *)malloc(strlen("	addl	r%d, r%d\n"));
 		sprintf(temp,"	addl	r%d, r%d\n\n",cReg-1,cReg-2);
 		inmain = cat(inmain,temp);
-
 	}
 	else if(oop == '-'){
 		temp = (char *)malloc(strlen("	subl	r1, r0\n"));
@@ -417,6 +417,7 @@ void initINloop(int count,string* regin,char oop,int val){
 		else if(oop == 'M')	{
 			reg[a[4]-'A'] = reg[a[4]-'A'] % val;
 		}
+		printf("%d\n",reg[a[4]-'A']);
 	}
 	cReg = 1;
 	//	.L2:
