@@ -173,7 +173,7 @@ loop:		FORWARD '(' exp ',' exp ')' 			{ funtionLOOP($3,$5); cReg = 0;}
 													{ int i = 0 ; for(;i<$3;i++) funtionLOOP($7,$9); }
 ;
 
-command:	SHOW_DEC exp 	{ $$=$2; }
+command:	SHOW_DEC exp 	{ showDec($2); $$=$2; }
 ;
 
 init:		REGISTER INIT exp 	{ 	loadToReg($3,$1);
@@ -219,6 +219,33 @@ void addtoReg(int in){
 	cReg++;
 }
 
+void showDec(string* in){
+	char a[100];
+	strcpy(a,(*in).c_str());
+	r[cReg]=reg[a[4]-'A'];
+
+	temp = (char *)malloc(strlen("	movl	%d(%%rbp), r%d\n"));
+	sprintf(temp,"	movl	%d(%%rbp), r%d\n",((a[4]-'A')*8)+200,cReg);
+	inmain = cat(inmain,temp);
+
+	temp = (char *)malloc(strlen("\tmovl\t$.LC%d, %%edi\n\tmovl\t$%d, %%eax\n\tcall\tprintf\n"));
+	sprintf(temp,"\tmovl\t$.LC%d, %%edi\n",countString);
+	inmain = cat(inmain,temp);
+
+	cReg++;
+}
+void showDec(int in){
+	r[cReg] = in;
+
+	temp = (char *)malloc(strlen("	movl	$%d, r%d\n"));
+	sprintf(temp,"	movl	$%d, r%d\n",r[cReg],cReg);
+	inmain = cat(inmain,temp);
+
+	temp = (char *)malloc(strlen("\tmovl\t$.LC%d, %%edi\n\tmovl\t$%d, %%eax\n\tcall\tprintf\n"));
+	sprintf(temp,"\tmovl\t$.LC%d, %%edi\n",countString);
+	inmain = cat(inmain,temp);
+	cReg++;
+}
 void funtionIF(int con,int stat1)
 {
 	if(con) printf("%d\n",stat1);
@@ -282,20 +309,7 @@ void SHOWSTRING(string* str)
 	/*
 	header	.LCCountString:
 	.string	"xxx"
-
-	movl	$.LC0, %edi
-	movl	$0, %eax
-	call	printf
-	*/
-
-	temp = (char *)malloc(strlen("\tmovl\t$.LC%d, %%edi\n\tmovl\t$%d, %%eax\n\tcall\tprintf\n"));
-	sprintf(temp,"\tmovl\t$.LC%d, %%edi\n\tmovl\t$0, %%eax\n\tcall\tprintf\n",countString);
-	inmain = cat(inmain,temp);
-
 	//header
-
-
-	header = cat(header,temp);
 
 
 	/*movl	-4(%rbp), %eax
@@ -342,6 +356,10 @@ void SHOWSTRING(string* str)
 	temp = (char *)malloc(strlen("\"\n"));
 	sprintf(temp,"\"\n\n");
 	header = cat(header,temp);
+
+	temp = (char *)malloc(strlen("\tmovl\t$.LC%d, %%edi\n\tmovl\t$%d, %%eax\n\tcall\tprintf\n"));
+	sprintf(temp,"\tmovl\t$.LC%d, %%edi\n",countString);
+	inmain = cat(inmain,temp);
 
 	countString++;
 	printf("\n");
