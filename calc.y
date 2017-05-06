@@ -20,6 +20,7 @@
 	void addtoReg(int in);
 
 	void showDec(void);
+	void headerPercentD();
 
 	char* cat(char* old,char* nw); // concast string
 
@@ -31,13 +32,14 @@
 	int isReg = 0;
 	int inregTo = 0;
 	int countString = 0;
+	int lcPercentD = 0;
 	char *header="";
 	char *inmain="";
 	char *temp="";
 
 	int r[13]={0};//r0-r12
 	int cReg = 0;
-
+	int alreadyP = 0;
 	int cLoop = 0;
 
 %}
@@ -222,14 +224,22 @@ void addtoReg(int in){
 }
 
 void showDec(void){
-	temp = (char *)malloc(strlen("\n.LC%d\n\t.string\t\"%%d\"\n"));
-	sprintf(temp,".LC%d\n\t.string\t\"%%d\"\n",countString);
-	header = cat(header,temp);
-
+	headerPercentD();
 	temp = (char *)malloc(strlen("\tmovl\t$.LC%d, %%edi\n\tmovl\t$%d, %%eax\n\tcall\tprintf\n\n"));
-	sprintf(temp,"\tmovl\t$.LC%d, %%edi\n\tmovl\t$%d, %%eax\n\tcall\tprintf\n\n",countString);
+	sprintf(temp,"\tmovl\t$.LC%d, %%edi\n\tmovl\t$%d, %%eax\n\tcall\tprintf\n\n",lcPercentD);
 	inmain = cat(inmain,temp);
 
+}
+
+void headerPercentD(){
+	if(!alreadyP){
+		temp = (char *)malloc(strlen("\n.LC%d\n\t.string\t\"%%d\"\n"));
+		sprintf(temp,".LC%d\n\t.string\t\"%%d\"\n",countString);
+		header = cat(header,temp);
+		alreadyP = 1;
+		lcPercentD = countString;
+		countString++;
+	}
 }
 
 void funtionIF(int con,int stat1)
@@ -320,6 +330,8 @@ void SHOWSTRING(string* str)
 			temp = (char *)malloc(2);
 			sprintf(temp,"%%d");
 			header = cat(header,temp);
+			alreadyP = 1;
+			lcPercentD = countString;
 			//inmain
 			/*
 			movl	-4(%rbp), %esi
