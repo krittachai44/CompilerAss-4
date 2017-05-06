@@ -42,7 +42,7 @@
 	int r[13]={0};//r0-r12
 	int cReg = 0;
 	int alreadyP = 0;
-	int cLoop = 0;
+	int cLX = 0;
 
 %}
 
@@ -73,9 +73,6 @@
 %left	PLUS MINUS
 %left	MULT DIV MOD
 %left	COMPARE
-%left	OR
-%left	AND
-%left	NOT
 %left	NEG
 
 %left	EXIT
@@ -159,19 +156,24 @@ exp:		REGISTER 	{ addtoReg($1); $$ = regToInt($1);}
 | command
 ;
 
-condition:	exp COMPARE exp		{ $$ = $1== $3?1:0;}
-| exp '<' exp		{ $$ = $1 < $3?1:0;}
-| exp '>' exp		{ $$ = $1 > $3?1:0;}
+condition:	exp COMPARE exp		{
+						// 		cmpl	$1, -8(%rbp)
+						// 		jne		.L2
+								temp = (char *)malloc(strlen("\tcmpl\t$%d, r%d\n\tjne\t.L%d\n"));
+								sprintf(temp,"\tcmpl\t$%d, r%d\n\tjne\t.L%d\n",$1,cReg,2+cLX);
+								inmain = cat(inmain,temp);
+								printf("%s\n", inmain);
+								$$=$1==$3?1:0;}
 ;
 
-compare:	IF '(' exp ')' '{' exp '}'  				{ funtionIF($3,$6); }
-| IF '(' exp ')' '{' REGISTER INIT exp '}'  			{ if($3){loadToReg($8,$6);} }
-| IF '(' exp ')' '{' exp '}' ELSE '{' exp '}'			{ funtionIFELSE($3,$6,$10); }
-| IF '(' exp ')' '{' exp '}' ELSE '{' REGISTER INIT exp '}'
+compare:	IF '(' condition ')' '{' exp '}'  				{ funtionIF($3,$6); }
+| IF '(' condition ')' '{' REGISTER INIT exp '}'  			{ if($3){loadToReg($8,$6);} }
+| IF '(' condition ')' '{' exp '}' ELSE '{' exp '}'			{ funtionIFELSE($3,$6,$10); }
+| IF '(' condition ')' '{' exp '}' ELSE '{' REGISTER INIT exp '}'
 { if($3) printf("%d\n",$6); else loadToReg($12,$10); }
-| IF '(' exp ')' '{' REGISTER INIT exp '}' ELSE '{' exp '}'
+| IF '(' condition ')' '{' REGISTER INIT exp '}' ELSE '{' exp '}'
 { if($3) loadToReg($8,$6); else printf("%d\n",$12); }
-| IF '(' exp ')' '{' REGISTER INIT exp '}' ELSE '{' REGISTER INIT exp '}'	{if($3){loadToReg($8,$6);}else{loadToReg($14,$12);}}
+| IF '(' condition ')' '{' REGISTER INIT exp '}' ELSE '{' REGISTER INIT exp '}'	{if($3){loadToReg($8,$6);}else{loadToReg($14,$12);}}
 ;
 
 loop:		FORWARD '(' exp ',' exp ')' 			{ funtionLOOP($3,$5); cReg = 1;}
@@ -233,6 +235,9 @@ void addtoReg(int in){
 	cReg++;
 }
 
+
+
+
 void initINloop(int count,string* regin,int val){
 	for(;count>0;count--)
 	{
@@ -244,6 +249,17 @@ void initINloop(int count,string* regin,int val){
 
 	}
 }
+
+// #regA INIT 1
+// SHOW_DEC #regA
+// FORWARD(10,SHOW_DEC #regA + 2)
+// 1
+// 3
+// 5
+// 7
+// 9
+
+
 
 void showDec(void){
 	headerPercentD();
@@ -266,6 +282,10 @@ void headerPercentD(){
 
 void funtionIF(int con,int stat1)
 {
+
+// 		xxx
+// .L2:
+
 	if(con) printf("%d\n",stat1);
 }
 void funtionIFELSE(int con,int stat1,int stat2)
@@ -291,7 +311,7 @@ void funtionLOOP(int con,int stat1)
 	*/
 
 	temp = (char *)malloc(strlen("\tmovl\t$0, r%d\n\tjmp .L2\n.L3:"));
-	sprintf(temp,"\tmovl\t$0, r%d\n\tjmp .L%d\n.L%d:\n",cReg,2+cLoop,3+cLoop);
+	sprintf(temp,"\tmovl\t$0, r%d\n\tjmp .L%d\n.L%d:\n",cReg,2+cLX,3+cLX);
 	inmain = cat(inmain,temp);
 	//value what  want to print
 	/////
@@ -303,11 +323,11 @@ void funtionLOOP(int con,int stat1)
 		printf("%d\n",stat1);
 	}*/
 	temp = (char *)malloc(strlen("\n\taddl\t$1, r%d\n.L2:\n\tcmpl\t$%d, r%d\n\tjle .L3\n\n"));
-	sprintf(temp,"\n\taddl\t$1, r%d\n.L%d:\n\tcmpl\t$%d, r%d\n\tjle .L%d\n\n",cReg,2+cLoop,con-1,cReg,3+cLoop);
+	sprintf(temp,"\n\taddl\t$1, r%d\n.L%d:\n\tcmpl\t$%d, r%d\n\tjle .L%d\n\n",cReg,2+cLX,con-1,cReg,3+cLX);
 	inmain = cat(inmain,temp);
 	cReg++;
 	countString++;
-	cLoop += 2;
+	cLX += 2;
 }
 
 void SHOWSTRING(string* str)

@@ -14,7 +14,7 @@ AA		[a-zA-Z0-9]
 digit		[0-9]
 hex		[a-fA-F0-9]
 int_const	{digit}+
-hex_const	{hex}+("h"|"H") 
+hex_const	{hex}+("h"|"H")
 reg		("#reg"{alpha}|"$acc")
 str		[a-zA-Z0-9.()_/*-+# ]
 
@@ -33,8 +33,6 @@ str		[a-zA-Z0-9.()_/*-+# ]
 "|"		{ yylval.op_val = new std::string(yytext); return OR; }
 "NOT"		{ yylval.op_val = new std::string(yytext); return NOT; }
 "=="		{ yylval.op_val = new std::string(yytext); return COMPARE; }
-">"		{ yylval.op_val = new std::string(yytext); return '<'; }
-"<"		{ yylval.op_val = new std::string(yytext); return '>'; }
 
 "SHOW_DEC"	{ yylval.op_val = new std::string(yytext); return SHOW_DEC; }
 
@@ -62,4 +60,3 @@ str		[a-zA-Z0-9.()_/*-+# ]
 
 .		{ printf("%s",yytext);/*YY_FLUSH_BUFFER; printf("\r! ERROR : Unrecognise string or character\n");*/ return NULL;}
 %%
-
