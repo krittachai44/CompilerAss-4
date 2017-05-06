@@ -81,15 +81,15 @@
 %%
 
 input:		/* empty */
-| exp	{ cout << "= " << $1 << endl; cReg = 0;printf("%s\n",header); printf("%s\n",inmain); cReg= 0;}
-| compare {printf("%s\n",inmain);cReg= 0;}
-| loop	{printf("%s\n",header); printf("%s\n",inmain);cReg= 0;}
-| init	{printf("%s\n",inmain);cReg= 0;}
+| exp	{ cout << "= " << $1 << endl; cReg = 0;}
+| compare {cReg= 0;}
+| loop	{cReg= 0;}
+| init	{cReg= 0;}
 | STRING { SHOWSTRING($1);
 	/*movl	$.LC0, %edi
 		movl	$0, %eax
-		call	printf*/ printf("%s\n",header); printf("%s\n",inmain );cReg= 0;}
-| EXIT {return 4;}
+		call	printf*/ cReg= 0;}
+| EXIT {printf("%s\n",header); printf("%s\n",inmain);return 4;}
 ;
 //char* temp = (char *)malloc(strlen("\taddl\t$%d,\t%d(%%rbp)"),$1,$2);
 exp:		REGISTER	{ addtoReg($1); $$ = regToInt($1); }
