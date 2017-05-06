@@ -99,7 +99,7 @@ input:		/* empty */
 				sprintf(temp,"\tmovl\t$0,%%eax\n\tleave\n\tret\n\t.cfi_endproc\n");
 				header = cat(inmain,temp);
 
-				printf("%s\n",header)
+				printf("%s\n",header);
 					FILE *fptr;
 				    	fptr = fopen("assem.txt","a");
 					fprintf(fptr,header);
