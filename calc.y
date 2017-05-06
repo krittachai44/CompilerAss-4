@@ -331,7 +331,7 @@ void initINloop(int count,string* regin,char oop,int val){
 	// 		cmpl	$4, -4(%rbp)
 	// 		jle	.L3
 	temp = (char *)malloc(strlen("\tmovl\t$0, r%d\n\tjmp\t.L%d\n.L%d\n"));
-	sprintf(temp,"\tmovl\t$0, r%d\n\tjmp\t.L%d\n.L%d",cReg,2+cLX,3+cLX);
+	sprintf(temp,"\tmovl\t$0, r%d\n\tjmp\t.L%d\n.L%d\n",cReg,2+cLX,3+cLX);
 	cReg+=1;
 	inmain = cat(inmain,temp);
 	char a[6];
@@ -389,6 +389,12 @@ void initINloop(int count,string* regin,char oop,int val){
 			reg[a[4]-'A'] = reg[a[4]-'A'] % val;
 		}
 	}
+	//	.L2:
+	// 		cmpl	$4, -4(%rbp)
+	// 		jle	.L3
+	temp = (char *)malloc(strlen(".L%d"));
+	sprintf(temp,".L%d\n\tcmpl\t$%d, %d(%%rbp)\n\tjle\t.L%d",2+cLX,count-1,((a[4]-'A')*8)+200,3+cLX);
+	inmain = cat(inmain,temp);
 }
 
 // #regA INIT 1
