@@ -163,6 +163,10 @@ condition:	exp COMPARE exp		{
 								sprintf(temp,"\tcmpl\tr%d, r%d\n",cReg,cReg-1);
 								inmain = cat(inmain,temp);
 
+								temp = (char *)malloc(strlen("\tjne\t.L%d\n"));
+								sprintf(temp,"\tjne\t.L%d\n",2+cLX);
+								inmain = cat(inmain,temp);
+
 								$$=$1==$3?1:0; cReg=0;}
 ;
 
@@ -190,9 +194,7 @@ compare:	IF '(' condition ')' '{' exp '}'  		{ funtionIF($3,$6);}
 { 	if($3){
 		loadToReg($8,$6);
 
-		temp = (char *)malloc(strlen("\tjne.L%d\n"));
-		sprintf(temp,"\tjne.L%d\n",2+cLX);
-		inmain = cat(inmain,temp);
+
 
 		if($3){loadToReg($8,$6);}else{printf("%d",$13);}
 	 //INIT IN IF
@@ -211,7 +213,7 @@ compare:	IF '(' condition ')' '{' exp '}'  		{ funtionIF($3,$6);}
 			temp = (char *)malloc(strlen("	movl	%d,r1\n\n"));
 			sprintf(temp,"	movl	%d,r1\n\n",$13);
 			inmain = cat(inmain,temp);
-		
+
 		showDec();
 
 
