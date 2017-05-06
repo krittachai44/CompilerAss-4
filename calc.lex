@@ -29,9 +29,6 @@ str		[a-zA-Z0-9.()_/*-+# ]
 "/"		{ yylval.op_val = new std::string(yytext); return DIV; }
 "mod"		{ yylval.op_val = new std::string(yytext); return MOD; }
 
-"&"		{ yylval.op_val = new std::string(yytext); return AND; }
-"|"		{ yylval.op_val = new std::string(yytext); return OR; }
-"NOT"		{ yylval.op_val = new std::string(yytext); return NOT; }
 "=="		{ yylval.op_val = new std::string(yytext); return COMPARE; }
 
 "SHOW_DEC"	{ yylval.op_val = new std::string(yytext); return SHOW_DEC; }
