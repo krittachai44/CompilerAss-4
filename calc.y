@@ -392,8 +392,8 @@ void initINloop(int count,string* regin,char oop,int val){
 	//	.L2:
 	// 		cmpl	$4, -4(%rbp)
 	// 		jle	.L3
-	temp = (char *)malloc(strlen(".L%d"));
-	sprintf(temp,".L%d\n\tcmpl\t$%d, %d(%%rbp)\n\tjle\t.L%d",2+cLX,count-1,((a[4]-'A')*8)+200,3+cLX);
+	temp = (char *)malloc(strlen(".L%d\n\tcmpl\t$%d, %d(%%rbp)\n\tjle\t.L%d\n"));
+	sprintf(temp,".L%d\n\tcmpl\t$%d, %d(%%rbp)\n\tjle\t.L%d\n",2+cLX,count-1,((a[4]-'A')*8)+200,3+cLX);
 	inmain = cat(inmain,temp);
 }
 
