@@ -173,6 +173,12 @@ condition:	exp COMPARE exp		{
 compare:	IF '(' condition ')' '{' exp '}'  		{ funtionIF($3,$6);}
 | IF '(' condition ')' '{' REGISTER INIT exp '}'  	{ 	if($3){loadToReg($8,$6);}
 
+														temp = (char *)malloc(strlen("	movl	r0, %d(%%rbp)\n\n"));
+														char a[100];
+														strcpy(a,(*$6).c_str());
+														sprintf(temp,"	movl	r0, %d(%%rbp)\n\n",((a[4]-'A')*8)+200);
+														inmain = cat(inmain,temp);
+
 														temp = (char *)malloc(strlen(".L%d\n"));
 														sprintf(temp,".L%d\n",2+cLX);
 														inmain = cat(inmain,temp);
