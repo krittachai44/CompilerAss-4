@@ -22,6 +22,8 @@
 	void showDec(void);
 	void headerPercentD();
 
+	void initINloop(int count,string* regin,int val);
+
 	char* cat(char* old,char* nw); // concast string
 
 	int reg[26] = {0};
@@ -177,6 +179,12 @@ loop:		FORWARD '(' exp ',' exp ')' 			{ funtionLOOP($3,$5); cReg = 1;}
 			| FORWARD'('exp ',' FORWARD'('exp','exp')'')' {{ int i = 0 ; for(;i<$3;i++) funtionLOOP($7,$9); }}
 			| FORWARD'('exp ',' FORWARD'('exp','SHOW_DEC exp')'')'
 													{ int i = 0 ; for(;i<$3;i++) funtionLOOP($7,$10); }
+			| FORWARD'('exp','REGISTER INIT exp')' {
+				initINloop($3,$5,$7);
+			}
+			| FORWARD'('exp','FORWARD'('exp','REGISTER INIT exp')'')'{
+
+			}
 ;
 
 command:	SHOW_DEC exp 	{ showDec(); $$=$2;}
@@ -223,6 +231,17 @@ void addtoReg(int in){
 	sprintf(temp,"	movl	$%d, r%d\n",r[cReg],cReg);
 	inmain = cat(inmain,temp);
 	cReg++;
+}
+
+void initINloop(int count,string* regin,int val){
+	for(;count>0;count--)
+	{
+		char a[6];
+		strcpt(a,(*regin).c_str());
+		reg[a[4]-'A'] = val;
+		printf("%d",reg[a[4]-'A']);
+		
+	}
 }
 
 void showDec(void){
