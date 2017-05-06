@@ -163,7 +163,7 @@ condition:	exp COMPARE exp		{
 								sprintf(temp,"\tcmpl\tr%d, r%d\n\tjne\t.L%d\n",cReg,cReg-1,2+cLX);
 								inmain = cat(inmain,temp);
 
-								$$=$1==$3?1:0;}
+								$$=$1==$3?1:0; cReg=0;}
 ;
 
 compare:	IF '(' condition ')' '{' exp '}'  		{ funtionIF($3,$6);}
