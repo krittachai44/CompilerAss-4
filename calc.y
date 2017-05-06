@@ -116,7 +116,7 @@ exp:		REGISTER 	{ addtoReg($1); $$ = regToInt($1);}
 				inmain = cat(inmain,temp);
 
 				cReg = 1; r[0] = $$;}
-| exp DIV exp	{ $$ = $1 / $3; cReg = 1; r[0] = $$;
+| exp DIV exp	{ $$ = $1 / $3;
 				/*
 				movl	-8(%rbp), %eax
 				cltd
@@ -126,9 +126,9 @@ exp:		REGISTER 	{ addtoReg($1); $$ = regToInt($1);}
 				temp = (char *)malloc(strlen("	movl	r0, %%eax\n\tcltd\n\tidivl	r1\n\tmovl\t%%eax, r0\n"));
 				sprintf(temp,"	movl	r0, %%eax\n\tcltd\n\tidivl	r1\n\tmovl\t%%eax, r0\n\n");
 				inmain = cat(inmain,temp);
-				cReg = 0; r[0] = $$;
+				cReg = 1; r[0] = $$;
 				}
-| exp MOD exp	{ $$ = $1 % $3; cReg = 1; r[0] = $$;
+| exp MOD exp	{ $$ = $1 % $3;
 				// 	movl	-8(%rbp), %eax
 				// cltd
 				// idivl	-4(%rbp)
@@ -136,7 +136,7 @@ exp:		REGISTER 	{ addtoReg($1); $$ = regToInt($1);}
 				temp = (char *)malloc(strlen("	movl	r0, %%eax\n\tcltd\n\tidivl	r1\n\tmovl\t%%eax, r0\n"));
 				sprintf(temp,"	movl	r0, %%eax\n\tcltd\n\tidivl	r1\n\tmovl\t%%eax, r0\n\n");
 				inmain = cat(inmain,temp);
-				cReg = 0; r[0] = $$;
+				cReg = 1; r[0] = $$;
 				}
 | MINUS exp  %prec NEG { 	$$ = -$2;
 							cReg--;
@@ -146,7 +146,7 @@ exp:		REGISTER 	{ addtoReg($1); $$ = regToInt($1);}
 							sprintf(temp,"	subl	$%d, r%d\n",tempR,cReg);
 							inmain = cat(inmain,temp);
 
-							cReg = 0; r[0] = $$;
+							cReg = 1; r[0] = $$;
 						}
 | '(' exp ')'        { $$ = $2;}
 | condition
@@ -168,7 +168,7 @@ compare:	IF '(' exp ')' '{' exp '}'  				{ funtionIF($3,$6); }
 | IF '(' exp ')' '{' REGISTER INIT exp '}' ELSE '{' REGISTER INIT exp '}'	{if($3){loadToReg($8,$6);}else{loadToReg($14,$12);}}
 ;
 
-loop:		FORWARD '(' exp ',' exp ')' 			{ funtionLOOP($3,$5); cReg = 0; r[0] = $$;}
+loop:		FORWARD '(' exp ',' exp ')' 			{ funtionLOOP($3,$5); cReg = 0;}
 			| FORWARD'('exp ',' FORWARD'('exp','exp')'')'
 													{ int i = 0 ; for(;i<$3;i++) funtionLOOP($7,$9); }
 ;
