@@ -207,18 +207,14 @@ compare:	IF '(' condition ')' '{' exp '}'  		{ funtionIF($3,$6);}
 		sprintf(temp,".L%d\n",2+cLX);
 		inmain = cat(inmain,temp);
 
-	//INIT IN ELSE
+	//print IN ELSE
 			temp = (char *)malloc(strlen("	movl	%d,r1\n\n"));
 			sprintf(temp,"	movl	%d,r1\n",$13);
 			inmain = cat(inmain,temp);
 
 		showDec();
-
-
-
 		cLX += 1;
 
-	//funtionIF($3,$13);
 }
 | IF '(' condition ')' '{' REGISTER INIT exp '}' ELSE '{' REGISTER INIT exp '}'
 {
@@ -236,8 +232,12 @@ compare:	IF '(' condition ')' '{' exp '}'  		{ funtionIF($3,$6);}
 	inmain = cat(inmain,temp);
 
 //INIT IN ELSE
-	temp = (char *)malloc(strlen("\tmovl\tr%d,r%d\n"));
-	sprintf(temp,"\tmovl\tr%d,r%d\n",cReg,cReg-1);
+	temp = (char *)malloc(strlen("	movl	%d,r1\n\n"));
+	sprintf(temp,"	movl	%d,r1\n",$14);
+	inmain = cat(inmain,temp);
+
+	temp = (char *)malloc(strlen("\tmovl\tr1,r%d\n"));
+	sprintf(temp,"\tmovl\tr1,r%d\n",cReg);
 	inmain = cat(inmain,temp);
 
 	cLX += 1;
