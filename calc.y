@@ -237,10 +237,10 @@ void initINloop(int count,string* regin,int val){
 	for(;count>0;count--)
 	{
 		char a[6];
-		strcpt(a,(*regin).c_str());
+		strcpy(a,(*regin).c_str());
 		reg[a[4]-'A'] = val;
 		printf("%d",reg[a[4]-'A']);
-		
+
 	}
 }
 
