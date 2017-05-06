@@ -174,36 +174,6 @@ compare:	IF '(' condition ')' '{' exp '}'  		{ funtionIF($3,$6);}
 														inmain = cat(inmain,temp);
 														cLX += 1;
 													}
-| IF '(' condition ')' '{' exp '}' ELSE '{' exp '}'	{ funtionIFELSE($3,$6,$10);}
-| IF '(' condition ')' '{' exp '}' ELSE '{' REGISTER INIT exp '}'
-{
-	if($3) funtionIF($3,$6);
-	else {
-		loadToReg($12,$10);
-		temp = (char *)malloc(strlen(".L%d\n"));
-		sprintf(temp,".L%d\n",2+cLX);
-		inmain = cat(inmain,temp);
-		cLX += 1;
-	}
-}
-| IF '(' condition ')' '{' REGISTER INIT exp '}' ELSE '{' exp '}'
-{ 	if($3){
-		loadToReg($8,$6);
-		temp = (char *)malloc(strlen(".L%d\n"));
-		sprintf(temp,".L%d\n",2+cLX);
-		inmain = cat(inmain,temp);
-		cLX += 1;
-	}
-	else funtionIF($3,$12);
-}
-| IF '(' condition ')' '{' REGISTER INIT exp '}' ELSE '{' REGISTER INIT exp '}'
-{
-	if($3){loadToReg($8,$6);}else{loadToReg($14,$12);}
-	temp = (char *)malloc(strlen(".L%d\n"));
-	sprintf(temp,".L%d\n",2+cLX);
-	inmain = cat(inmain,temp);
-	cLX += 1;
-}
 ;
 
 loop:		FORWARD '(' exp ',' exp ')' 			{ funtionLOOP($3,$5); cReg = 1;}
