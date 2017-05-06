@@ -31,6 +31,7 @@
 	int countString = 0;
 	char *header="";
 	char *inmain="";
+	char *temp="";
 
 	int r[13]={0};//r0-r12
 	int cReg = 0;
@@ -77,7 +78,7 @@
 input:		/* empty */
 | exp	{ cout << "= " << $1 << endl; cReg = 0; printf("%s\n",inmain); }
 | compare
-| loop	{printf("%s\n",inmain);}
+| loop	{printf("%s\n",header); printf("%s\n",inmain);}
 | init	{printf("%s\n",inmain);}
 | STRING { SHOWSTRING($1);
 	/*movl	$.LC0, %edi
@@ -90,14 +91,14 @@ exp:		REGISTER 	{ addtoReg($1); $$ = regToInt($1);}
 // movl	-8(%rbp), %eax
 |INTEGER_LITERAL{ addtoReg($1); $$ = $1; }
 | exp PLUS exp	{ $$ = $1 + $3;
-				char* temp = (char *)malloc(strlen("	addl	r1, r0\n"));
+				temp = (char *)malloc(strlen("	addl	r1, r0\n"));
 				sprintf(temp,"	addl	r1, r0\n\n");
 				inmain = cat(inmain,temp);
 
 				cReg = 1; r[0] = $$;
 				}
 | exp MINUS exp	{ $$ = $1 - $3;
-				char* temp = (char *)malloc(strlen("	subl	r1, r0\n"));
+				temp = (char *)malloc(strlen("	subl	r1, r0\n"));
 				sprintf(temp,"	subl	r1, r0\n\n");
 				inmain = cat(inmain,temp);
 
@@ -108,7 +109,7 @@ exp:		REGISTER 	{ addtoReg($1); $$ = regToInt($1);}
 				// imull	-4(%rbp), %eax
 				// movl	%eax, -8(%rbp)
 
-				char* temp = (char *)malloc(strlen("\tmovl\tr0, %%eax\n\timull	r1, %%eax\n\tmovl\t%%eax, r0\n\n"));
+				temp = (char *)malloc(strlen("\tmovl\tr0, %%eax\n\timull	r1, %%eax\n\tmovl\t%%eax, r0\n\n"));
 				sprintf(temp,"\tmovl\tr0, %%eax\n\timull	r1, %%eax\n\tmovl\t%%eax, r0\n\n");
 				inmain = cat(inmain,temp);
 
@@ -120,7 +121,7 @@ exp:		REGISTER 	{ addtoReg($1); $$ = regToInt($1);}
 				idivl	-4(%rbp)
 				movl	%eax, -8(%rbp)
 				*/
-				char* temp = (char *)malloc(strlen("	movl	r0, %%eax\n\tcltd\n\tidivl	r1\n\tmovl\t%%eax, r0\n"));
+				temp = (char *)malloc(strlen("	movl	r0, %%eax\n\tcltd\n\tidivl	r1\n\tmovl\t%%eax, r0\n"));
 				sprintf(temp,"	movl	r0, %%eax\n\tcltd\n\tidivl	r1\n\tmovl\t%%eax, r0\n\n");
 				inmain = cat(inmain,temp);
 				}
@@ -129,7 +130,7 @@ exp:		REGISTER 	{ addtoReg($1); $$ = regToInt($1);}
 				// cltd
 				// idivl	-4(%rbp)
 				// movl	%edx, -8(%rbp)
-				char* temp = (char *)malloc(strlen("	movl	r0, %%eax\n\tcltd\n\tidivl	r1\n\tmovl\t%%eax, r0\n"));
+				temp = (char *)malloc(strlen("	movl	r0, %%eax\n\tcltd\n\tidivl	r1\n\tmovl\t%%eax, r0\n"));
 				sprintf(temp,"	movl	r0, %%eax\n\tcltd\n\tidivl	r1\n\tmovl\t%%eax, r0\n\n");
 				inmain = cat(inmain,temp);
 				}
@@ -137,7 +138,7 @@ exp:		REGISTER 	{ addtoReg($1); $$ = regToInt($1);}
 							cReg--;
 							int tempR = r[cReg]*2;
 
-							char* temp = (char *)malloc(strlen("	subl	$%d, r%d\n"));
+							temp = (char *)malloc(strlen("	subl	$%d, r%d\n"));
 							sprintf(temp,"	subl	$%d, r%d\n",tempR,cReg);
 							inmain = cat(inmain,temp);
 							cReg++;
@@ -171,7 +172,7 @@ command:	SHOW_DEC exp 	{ $$=$2; }
 ;
 
 init:		REGISTER INIT exp 	{ 	loadToReg($3,$1);
-									char* temp = (char *)malloc(strlen("	movl	r1, %d(%%rbp)\n\n"));
+									temp = (char *)malloc(strlen("	movl	r1, %d(%%rbp)\n\n"));
 									char a[100];
 									strcpy(a,(*$1).c_str());
 									sprintf(temp,"	movl	r0, %d(%%rbp)\n\n",((a[4]-'A')*8)+200);
@@ -198,7 +199,7 @@ void addtoReg(string* in){
 	strcpy(a,(*in).c_str());
 	r[cReg]=reg[a[4]-'A'];
 
-	char* temp = (char *)malloc(strlen("	movl	%d(%%rbp), r%d\n"));
+	temp = (char *)malloc(strlen("	movl	%d(%%rbp), r%d\n"));
 	sprintf(temp,"	movl	%d(%%rbp), r%d\n",((a[4]-'A')*8)+200,cReg);
 	inmain = cat(inmain,temp);
 	cReg++;
@@ -207,7 +208,7 @@ void addtoReg(string* in){
 void addtoReg(int in){
 	r[cReg] = in;
 
-	char* temp = (char *)malloc(strlen("	movl	$%d, r%d\n"));
+	temp = (char *)malloc(strlen("	movl	$%d, r%d\n"));
 	sprintf(temp,"	movl	$%d, r%d\n",r[cReg],cReg);
 	inmain = cat(inmain,temp);
 	cReg++;
@@ -238,15 +239,24 @@ void funtionLOOP(int con,int stat1)
 	jle	.L3
 
 	*/
+	temp = (char *)malloc(strlen("\n.LC%d\n\t.string\t\"%%d\"\n"));
+	sprintf(temp,".LC%d\n\t.string\t\"%%d\"\n",countString);
+	header = cat(header,temp);
 
-	char* temp = (char *)malloc(strlen("\tmovl\t$0, r%d\n\tjmp .L2\n.L3:\n\taddl\t$1, r%d\n.L2:\n\tcmpl\t$%d, r%d\n\tjle .L3"));
-	sprintf(temp,"\tmovl\t$0, r%d\n\tjmp .L2\n.L3:\n\taddl\t$1, r%d\n.L2:\n\tcmpl\t$%d, r%d\n\tjle .L3\n",cReg,cReg,con-1,cReg);
+	temp = (char *)malloc(strlen("\tmovl\t$0, r%d\n\tjmp .L2\n.L3:"));
+	sprintf(temp,"\tmovl\t$0, r%d\n\tjmp .L2\n.L3:\n",cReg);
 	inmain = cat(inmain,temp);
 	int i=0;
 	for(;i<con;i++)
 	{
+
 		printf("%d\n",stat1);
 	}
+	temp = (char *)malloc(strlen("\n\taddl\t$1, r%d\n.L2:\n\tcmpl\t$%d, r%d\n\tjle .L3"));
+	sprintf(temp,"\n\taddl\t$1, r%d\n.L2:\n\tcmpl\t$%d, r%d\n\tjle .L3",cReg,con-1,cReg);
+	inmain = cat(inmain,temp);
+	cReg++;
+	countString++;
 }
 
 void SHOWSTRING(string* str)
@@ -263,15 +273,14 @@ void SHOWSTRING(string* str)
 	movl	$0, %eax
 	call	printf
 	*/
-	char* temp;
 
 	temp = (char *)malloc(strlen("\tmovl\t$.LC%d, %%edi\n\tmovl\t$%d, %%eax\n\tcall\tprintf\n"));
 	sprintf(temp,"\tmovl\t$.LC%d, %%edi\n\tmovl\t$0, %%eax\n\tcall\tprintf\n",countString);
 	inmain = cat(inmain,temp);
 
 	//header
-	temp = (char *)malloc(strlen("\n.LC%d\n\t.string\t\""));
-	sprintf(temp,".LC%d\n\t.string\t\"",countString);
+
+
 	header = cat(header,temp);
 
 
