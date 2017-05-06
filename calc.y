@@ -92,9 +92,9 @@ input:		/* empty */
 | EXIT {return 4;}
 ;
 //char* temp = (char *)malloc(strlen("\taddl\t$%d,\t%d(%%rbp)"),$1,$2);
-exp:		REGISTER 	{ addtoReg($1); $$ = regToInt($1);}
+exp:		REGISTER 	{ addtoReg($1); $$ = regToInt($1); cReg = 1;}
 // movl	-8(%rbp), %eax
-|INTEGER_LITERAL{ addtoReg($1); $$ = $1; }
+|INTEGER_LITERAL{ addtoReg($1); $$ = $1; cReg = 1;}
 | exp PLUS exp	{ $$ = $1 + $3;
 				temp = (char *)malloc(strlen("	addl	r1, r0\n"));
 				sprintf(temp,"	addl	r1, r0\n\n");
@@ -199,7 +199,7 @@ init:		REGISTER INIT exp 	{ 	loadToReg($3,$1);
 									sprintf(temp,"	movl	r0, %d(%%rbp)\n\n",((a[4]-'A')*8)+200);
 									inmain = cat(inmain,temp);
 
-									cReg = 0; r[0] = $$;
+									cReg = 1; r[0] = $$;
 								}
 ;
 
