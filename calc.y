@@ -260,18 +260,15 @@ compare:	IF '(' condition ')' '{' exp '}'  		{ funtionIF($3,$6);}
 }
 ;
 
-loop:		FORWARD '(' exp ',' exp ')' 			{ funtionLOOP($3,$5); cReg = 1;}
-			| FORWARD'('exp','SHOW_DEC exp')'		{ funtionLOOP($3,$6); cReg = 1;}
-			| FORWARD'('exp ',' FORWARD'('exp','exp')'')' {{ int i = 0 ; for(;i<$3;i++) funtionLOOP($7,$9); }}
-			| FORWARD'('exp ',' FORWARD'('exp','SHOW_DEC exp')'')'
-													{ int i = 0 ; for(;i<$3;i++) funtionLOOP($7,$10); }
-			| FORWARD'('exp','REGISTER INIT exp')' {
-				initINloop($3,$5,$7);
-			}
-			| FORWARD'('exp','FORWARD'('exp','REGISTER INIT exp')'')'{
-
-			}
-;
+loop:		FORWARD'('exp','REGISTER PLUS INTEGER_LITERAL ')' 	{ initINloop($3,$5,'+',$7); }
+			| FORWARD'('exp','REGISTER MINUS INTEGER_LITERAL ')' 	{ initINloop($3,$5,'-',$7); }
+			| FORWARD'('exp','REGISTER MULT INTEGER_LITERAL ')' 	{ initINloop($3,$5,'*',$7); }
+			| FORWARD'('exp','REGISTER DIV INTEGER_LITERAL ')' 	{ initINloop($3,$5,'/',$7); }
+			| FORWARD'('exp','REGISTER MOD INTEGER_LITERAL ')' 	{ initINloop($3,$5,'M',$7); }
+			| FORWARD'(' exp ',' exp ')' 				{ funtionLOOP($3,$5); cReg = 1;}
+			| FORWARD'('exp','SHOW_DEC exp')'			{ funtionLOOP($3,$6); cReg = 1;}
+			| FORWARD'('exp ',' FORWARD'('exp','exp')'')' 		{ int i = 0 ; for(;i<$3;i++) funtionLOOP($7,$9);  }
+			| FORWARD'('exp ',' FORWARD'('exp','SHOW_DEC exp')'')'	{ int i = 0 ; for(;i<$3;i++) funtionLOOP($7,$10); }
 
 command:	SHOW_DEC exp 	{ showDec(); $$=$2;}
 ;
@@ -322,15 +319,67 @@ void addtoReg(int in){
 
 
 
-void initINloop(int count,string* regin,int val){
+void initINloop(int count,string* regin,char oop,int val){
+	//	 	movl	$0, -4(%rbp)
+	// 		jmp	.L2
+	// .L3:
+	// 		movl	$.LC0, %edi
+	// 		movl	$0, %eax
+	// 		call	printf
+	// 		addl	$1, -4(%rbp)
+	// .L2:
+	// 		cmpl	$4, -4(%rbp)
+	// 		jle	.L3
+	temp = (char *)malloc(strlen("\tmovl\t$0, r%d\n\tjmp\t.L%d\n.L%d\n"));
+	sprintf(temp,"\tmovl\t$0, r%d\n\tjmp\t.L%d\n.L%d",cReg,2+cLX,3+cLX);
+	char a[6];
+	strcpy(a,(*regin).c_str());
 	for(;count>0;count--)
 	{
-		char a[6];
-		strcpy(a,(*regin).c_str());
-		printf("%c ",a[4]);
-		reg[a[4]-'A'] = val;
-		printf("%d\n",reg[a[4]-'A']);
+		if(oop == '+'){
+			temp = (char *)malloc(strlen("	addl	r1, r0\n"));
+			sprintf(temp,"	addl	r1, r0\n\n");
+			inmain = cat(inmain,temp);
 
+			cReg = 1; r[0] = $$;
+			reg[a[4]-'A'] = reg[a[4]-'A'] + val;
+		}
+		else if(oop == '-'){
+			temp = (char *)malloc(strlen("	subl	r1, r0\n"));
+			sprintf(temp,"	subl	r1, r0\n\n");
+			inmain = cat(inmain,temp);
+
+			cReg = 1; r[0] = $$;
+			reg[a[4]-'A'] = reg[a[4]-'A'] - val;
+		}
+		else if(oop == '*')	{
+			temp = (char *)malloc(strlen("	imull	r1, r0\n"));
+			sprintf(temp,"	imull	r1, r0\n\n");
+			inmain = cat(inmain,temp);
+
+			cReg = 1; r[0] = $$;
+			reg[a[4]-'A'] = reg[a[4]-'A'] * val;
+		}
+		else if(oop == '/')	{
+			temp = (char *)malloc(strlen("	idivl	r1, r0\n"));
+			sprintf(temp,"	idivl	r1, r0\n\n");
+			inmain = cat(inmain,temp);
+
+			cReg = 1; r[0] = $$;
+			reg[a[4]-'A'] = reg[a[4]-'A'] / val;
+		}
+		else if(oop == 'M')	{
+			temp = (char *)malloc(strlen("	movl	r1, r0\n"));
+			sprintf(temp,"	movl	r1, r0\n\n");
+			inmain = cat(inmain,temp);
+
+			cReg = 1; r[0] = $$;
+			reg[a[4]-'A'] = reg[a[4]-'A'] % val;
+		}
+		headerPercentD();
+		temp = (char *)malloc(strlen("\tmovl\tr%d, %%esi\n\tmovl\t$.LC%d, %%edi\n\tmovl\t$0, %%eax\n\tcall\tprintf\n\n"));
+		sprintf(temp,"\tmovl\tr%d, %%esi\n\tmovl\t$.LC%d, %%edi\n\tmovl\t$0, %%eax\n\tcall\tprintf\n\n",cReg-1,lcPercentD);
+		inmain = cat(inmain,temp);
 	}
 }
 
