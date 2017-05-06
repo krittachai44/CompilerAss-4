@@ -19,6 +19,9 @@
 	void addtoReg(string* in);
 	void addtoReg(int in);
 
+	void showDec(string* in);
+	void showDec(int in);
+
 	char* cat(char* old,char* nw); // concast string
 
 	int reg[26] = {0};
