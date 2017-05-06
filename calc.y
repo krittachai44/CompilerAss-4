@@ -335,57 +335,64 @@ void initINloop(int count,string* regin,char oop,int val){
 	cReg+=1;
 	inmain = cat(inmain,temp);
 	char a[6];
+
+
+	temp = (char *)malloc(strlen("	movl	%d(%%rbp), r%d\n"));
+	sprintf(temp,"	movl	%d(%%rbp), r%d\n",((a[4]-'A')*8)+200,cReg);
+	cReg+=1;
+	inmain = cat(inmain,temp);
+
+	temp = (char *)malloc(strlen("\tmovl	%d, r%d\n"));
+	sprintf(temp,"\tmovl	%d, r%d\n",val,cReg);
+	cReg+=1;
+	inmain = cat(inmain,temp);
+
+
 	strcpy(a,(*regin).c_str());
+	if(oop == '+'){
+		temp = (char *)malloc(strlen("	addl	r%d, r%d\n"));
+		sprintf(temp,"	addl	r%d, r%d\n\n",cReg-1,cReg-2);
+		cReg = 1;
+		inmain = cat(inmain,temp);
+
+	}
+	else if(oop == '-'){
+		temp = (char *)malloc(strlen("	subl	r1, r0\n"));
+		sprintf(temp,"	subl	r%d, r%d\n\n",cReg-1,cReg-2);
+		inmain = cat(inmain,temp);
+
+		cReg = 1;
+	}
+	else if(oop == '*')	{
+		temp = (char *)malloc(strlen("	imull	r1, r0\n"));
+		sprintf(temp,"	imull	r%d, r%d\n\n",cReg-1,cReg-2);
+		inmain = cat(inmain,temp);
+
+		cReg = 1;
+	}
+	else if(oop == '/')	{
+		temp = (char *)malloc(strlen("	idivl	r1, r0\n"));
+		sprintf(temp,"	idivl	r%d, r%d\n\n",cReg-1,cReg-2);
+		inmain = cat(inmain,temp);
+
+		cReg = 1;
+	}
+
 	for(;count>0;count--)
 	{
 		if(oop == '+'){
-			temp = (char *)malloc(strlen("	movl	%d(%%rbp), r%d\n"));
-			sprintf(temp,"	movl	%d(%%rbp), r%d\n",((a[4]-'A')*8)+200,cReg);
-			cReg+=1;
-			inmain = cat(inmain,temp);
-
-			temp = (char *)malloc(strlen("\tmovl	%d, r%d\n"));
-			sprintf(temp,"\tmovl	%d, r%d\n",val,cReg);
-			cReg+=1;
-			inmain = cat(inmain,temp);
-
-			temp = (char *)malloc(strlen("	addl	r%d, r%d\n"));
-			sprintf(temp,"	addl	r%d, r%d\n\n",cReg-1,cReg-2);
-			cReg = 1;
-			inmain = cat(inmain,temp);
-
 			reg[a[4]-'A'] = reg[a[4]-'A'] + val;
 		}
 		else if(oop == '-'){
-			temp = (char *)malloc(strlen("	subl	r1, r0\n"));
-			sprintf(temp,"	subl	r1, r0\n\n");
-			inmain = cat(inmain,temp);
-
-			cReg = 1;
 			reg[a[4]-'A'] = reg[a[4]-'A'] - val;
 		}
 		else if(oop == '*')	{
-			temp = (char *)malloc(strlen("	imull	r1, r0\n"));
-			sprintf(temp,"	imull	r1, r0\n\n");
-			inmain = cat(inmain,temp);
-
-			cReg = 1;
 			reg[a[4]-'A'] = reg[a[4]-'A'] * val;
 		}
 		else if(oop == '/')	{
-			temp = (char *)malloc(strlen("	idivl	r1, r0\n"));
-			sprintf(temp,"	idivl	r1, r0\n\n");
-			inmain = cat(inmain,temp);
-
-			cReg = 1;
 			reg[a[4]-'A'] = reg[a[4]-'A'] / val;
 		}
 		else if(oop == 'M')	{
-			temp = (char *)malloc(strlen("	movl	r1, r0\n"));
-			sprintf(temp,"	movl	r1, r0\n\n");
-			inmain = cat(inmain,temp);
-
-			cReg = 1;
 			reg[a[4]-'A'] = reg[a[4]-'A'] % val;
 		}
 	}
