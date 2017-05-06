@@ -238,8 +238,9 @@ void initINloop(int count,string* regin,int val){
 	{
 		char a[6];
 		strcpy(a,(*regin).c_str());
+		printf("%c ",a[4]);
 		reg[a[4]-'A'] = val;
-		printf("%d",reg[a[4]-'A']);
+		printf("%d\n",reg[a[4]-'A']);
 
 	}
 }
